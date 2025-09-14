@@ -384,6 +384,23 @@ model Media {
   @@map("media")
 }
 
+model HomepageContent {
+  id                  String   @id @default(cuid())
+  heroTitle           String
+  heroSubtitle        String
+  heroImage           String
+  heroButtonText      String
+  heroButtonLink      String
+  featuredTitle       String
+  featuredSubtitle    String
+  featuredProducts    String[]
+  isActive            Boolean  @default(true)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  @@map("homepage_content")
+}
+
 model DiscountCode {
   id          String   @id @default(cuid())
   code        String   @unique

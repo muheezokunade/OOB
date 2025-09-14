@@ -38,12 +38,33 @@ export default function HomepageManagement() {
   const [loading, setLoading] = useState(false)
   const [saving, setSaving] = useState(false)
 
+  useEffect(() => {
+    const load = async () => {
+      setLoading(true)
+      try {
+        const res = await fetch('/api/admin/homepage')
+        const json = await res.json()
+        if (json?.data) setContent(json.data)
+      } finally {
+        setLoading(false)
+      }
+    }
+    load()
+  }, [])
+
   const handleSave = async () => {
     setSaving(true)
     try {
-      // Here you would save to your database
-      // For now, we'll just simulate a save
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      const token = typeof window !== 'undefined' ? localStorage.getItem('admin_token') : null
+      const res = await fetch('/api/admin/homepage', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify(content),
+      })
+      if (!res.ok) throw new Error('Save failed')
       toast.success('Homepage content saved successfully!')
     } catch (error) {
       toast.error('Failed to save homepage content')

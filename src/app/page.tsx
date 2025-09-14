@@ -7,10 +7,12 @@ import { ProductCard } from "@/components/product-card";
 import { HeroBanner } from "@/components/hero-banner";
 import { getNewProducts, getBestSellers } from "@/data/products";
 import { ArrowRight, Star, Sparkles, Heart, TrendingUp, Award, Zap, ShoppingBag } from "lucide-react";
+import { db as prisma } from '@/lib/db'
 
-export default function Home() {
+export default async function Home() {
   const newProducts = getNewProducts();
   const bestSellers = getBestSellers();
+  const homepage = await prisma.homepageContent.findFirst({ orderBy: { updatedAt: 'desc' } })
 
   return (
     <div className="min-h-screen bg-background">
@@ -36,21 +38,24 @@ export default function Home() {
                 </Badge>
                 
                 <h1 className="display-2xl text-foreground leading-tight">
-                  Every Girl <br />
-                  <span className="text-gold italic">Deserves</span> <br />
-                  Her Perfect Moment
+                  {homepage?.heroTitle ?? (
+                    <>
+                      Every Girl <br />
+                      <span className="text-gold italic">Deserves</span> <br />
+                      Her Perfect Moment
+                    </>
+                  )}
                 </h1>
                 
                 <p className="text-xl text-muted-foreground leading-relaxed max-w-lg">
-                  Handcrafted bags and shoes that tell your story. From Lagos boardrooms to Abuja galas, 
-                  we create pieces that elevate your everyday into something extraordinary.
+                  {homepage?.heroSubtitle ?? 'Handcrafted bags and shoes that tell your story. From Lagos boardrooms to Abuja galas, we create pieces that elevate your everyday into something extraordinary.'}
                 </p>
               </div>
 
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button size="xl" className="group">
                   <ShoppingBag className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" />
-                  Explore Collection
+                  {homepage?.heroButtonText ?? 'Explore Collection'}
                   <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
                 </Button>
                 <Button size="xl" variant="outline" className="group">
@@ -78,7 +83,11 @@ export default function Home() {
 
             {/* Right Visual - Dynamic Banner */}
             <div className="relative">
-              <HeroBanner />
+              {homepage?.heroImage ? (
+                <Image src={homepage.heroImage} alt="Hero" fill className="object-cover rounded-2xl" />
+              ) : (
+                <HeroBanner />
+              )}
             </div>
           </div>
         </div>
