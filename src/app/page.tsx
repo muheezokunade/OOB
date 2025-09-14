@@ -7,12 +7,12 @@ import { ProductCard } from "@/components/product-card";
 import { HeroBanner } from "@/components/hero-banner";
 import { getNewProducts, getBestSellers } from "@/data/products";
 import { ArrowRight, Star, Sparkles, Heart, TrendingUp, Award, Zap, ShoppingBag } from "lucide-react";
-import { db as prisma } from '@/lib/db'
+import { db } from '@/lib/db'
 
 export default async function Home() {
   const newProducts = getNewProducts();
   const bestSellers = getBestSellers();
-  const homepage = await prisma.homepageContent.findFirst({ orderBy: { updatedAt: 'desc' } })
+  const homepage = await db.homepageContent.findFirst({ orderBy: { updatedAt: 'desc' } })
 
   return (
     <div className="min-h-screen bg-background">
