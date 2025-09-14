@@ -19,6 +19,9 @@ export async function POST(request: NextRequest) {
     const file = formData.get('file') as File
     const folder = formData.get('folder') as string || 'omo-oni-bag'
     const tags = formData.get('tags') as string
+    const quality = formData.get('quality') as string
+    const format = formData.get('format') as string
+    const flags = formData.get('flags') as string
 
     if (!file) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 })
@@ -32,18 +35,36 @@ export async function POST(request: NextRequest) {
       }, { status: 400 })
     }
 
-    // Validate file size (5MB max)
-    const maxSize = 5 * 1024 * 1024 // 5MB
+    // Dynamic file size validation based on folder
+    let maxSize = 5 * 1024 * 1024 // Default 5MB
+    if (folder.includes('high-quality') || folder.includes('homepage')) {
+      maxSize = 25 * 1024 * 1024 // 25MB for high-quality images
+    }
+
     if (file.size > maxSize) {
       return NextResponse.json({ 
-        error: 'File too large. Maximum size is 5MB.' 
+        error: `File too large. Maximum size is ${Math.round(maxSize / (1024 * 1024))}MB.` 
       }, { status: 400 })
     }
 
-    // Upload to Cloudinary
-    const result = await uploadImage(file, folder, {
+    // Prepare upload options
+    const uploadOptions: any = {
       tags: tags ? tags.split(',') : undefined
-    })
+    }
+
+    // Add quality settings for high-quality uploads
+    if (quality) {
+      uploadOptions.quality = quality
+    }
+    if (format) {
+      uploadOptions.format = format
+    }
+    if (flags) {
+      uploadOptions.flags = flags
+    }
+
+    // Upload to Cloudinary
+    const result = await uploadImage(file, folder, uploadOptions)
 
     return NextResponse.json({
       success: true,
@@ -101,3 +122,4 @@ export async function DELETE(request: NextRequest) {
     )
   }
 }
+

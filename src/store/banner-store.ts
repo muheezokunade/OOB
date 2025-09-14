@@ -43,6 +43,7 @@ export const useBannerStore = create<BannerState>((set, get) => ({
       params.append('active', 'true')
 
       const response = await fetch(`/api/banners?${params.toString()}`)
+      
       if (!response.ok) {
         throw new Error('Failed to fetch banners')
       }
@@ -57,7 +58,10 @@ export const useBannerStore = create<BannerState>((set, get) => ({
   createBanner: async (bannerData) => {
     set({ loading: true, error: null })
     try {
-      const token = localStorage.getItem('adminToken')
+      const token = localStorage.getItem('admin_token')
+      if (!token) {
+        throw new Error('Not authenticated')
+      }
       const response = await fetch('/api/banners', {
         method: 'POST',
         headers: {
@@ -85,7 +89,10 @@ export const useBannerStore = create<BannerState>((set, get) => ({
   updateBanner: async (id, bannerData) => {
     set({ loading: true, error: null })
     try {
-      const token = localStorage.getItem('adminToken')
+      const token = localStorage.getItem('admin_token')
+      if (!token) {
+        throw new Error('Not authenticated')
+      }
       const response = await fetch(`/api/banners/${id}`, {
         method: 'PUT',
         headers: {
@@ -115,7 +122,10 @@ export const useBannerStore = create<BannerState>((set, get) => ({
   deleteBanner: async (id) => {
     set({ loading: true, error: null })
     try {
-      const token = localStorage.getItem('adminToken')
+      const token = localStorage.getItem('admin_token')
+      if (!token) {
+        throw new Error('Not authenticated')
+      }
       const response = await fetch(`/api/banners/${id}`, {
         method: 'DELETE',
         headers: {
@@ -139,3 +149,5 @@ export const useBannerStore = create<BannerState>((set, get) => ({
   setLoading: (loading) => set({ loading }),
   setError: (error) => set({ error })
 }))
+
+

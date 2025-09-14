@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { Search, Filter, Grid3X3, List, SortAsc } from 'lucide-react'
 import { products, getPriceRange } from '@/data/products'
@@ -22,7 +22,7 @@ import { Pagination } from '@/components/ui/pagination'
 import { ProductCard } from '@/components/product-card'
 import { cn } from '@/lib/utils'
 
-export default function ShopPage() {
+function ShopPageContent() {
   const searchParams = useSearchParams()
   const category = searchParams.get('category')
   
@@ -214,11 +214,13 @@ export default function ShopPage() {
           </div>
 
           {/* Mobile Filter Sidebar */}
-          <FilterSidebar 
-            allProducts={products}
-            isOpen={isFiltersOpen}
-            onClose={toggleFilters}
-          />
+          <div className="lg:hidden">
+            <FilterSidebar 
+              allProducts={products}
+              isOpen={isFiltersOpen}
+              onClose={toggleFilters}
+            />
+          </div>
 
           {/* Products Grid */}
           <div className="flex-1">
@@ -284,5 +286,13 @@ export default function ShopPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function ShopPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ShopPageContent />
+    </Suspense>
   )
 }

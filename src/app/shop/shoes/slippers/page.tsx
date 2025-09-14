@@ -6,3 +6,5 @@ export default function SlippersPage() {
   return <ShoesPage />
 }
 
+
+

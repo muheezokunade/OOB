@@ -72,6 +72,12 @@ const menuItems = [
     badge: null
   },
   {
+    title: 'Homepage',
+    href: '/admin/homepage',
+    icon: LayoutDashboard,
+    badge: null
+  },
+  {
     title: 'Messages',
     href: '/admin/messages',
     icon: MessageSquare,

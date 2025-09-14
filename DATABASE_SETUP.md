@@ -214,3 +214,5 @@ After setting up the database:
 5. **Deploy to production**
 
 The database is now ready to support the full OmoOniBag e-commerce platform with all advanced features including search, recommendations, analytics, and multi-language support.
+
+

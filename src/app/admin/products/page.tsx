@@ -223,8 +223,8 @@ export default function AdminProductsPage() {
             </Button>
           </div>
         ) : (
-
-        {viewMode === 'list' ? (
+          <>
+            {viewMode === 'list' ? (
           /* List View */
           <div className="overflow-x-auto">
             <table className="w-full">
@@ -338,6 +338,7 @@ export default function AdminProductsPage() {
             ))}
           </div>
         )}
+          </>
         )}
       </Card>
     </div>

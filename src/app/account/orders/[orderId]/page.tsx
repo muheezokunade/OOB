@@ -350,3 +350,5 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
     </div>
   )
 }
+
+

@@ -71,11 +71,9 @@ export const products: Product[] = [
     price: 45000,
     originalPrice: 55000,
     images: [
-      '/images/products/luxury-tote-black-1.svg',
-      '/images/products/luxury-tote-black-2.svg',
-      '/images/products/luxury-tote-black-3.svg',
-      '/images/products/luxury-tote-black-4.svg',
-      '/images/products/luxury-tote-black-5.svg'
+      '/images/products/luxury-tote.svg',
+      '/images/products/luxury-tote.svg',
+      '/images/products/luxury-tote.svg'
     ],
     colors: ['#0B0B0B', '#8B4513', '#654321'],
     category: 'Bags',
@@ -190,8 +188,8 @@ export const products: Product[] = [
     name: 'Elegant Evening Clutch',
     price: 25000,
     images: [
-      '/images/products/elegant-clutch-gold-1.svg',
-      '/images/products/elegant-clutch-gold-2.svg'
+      '/images/products/elegant-clutch.svg',
+      '/images/products/elegant-clutch.svg'
     ],
     colors: ['#C7A955', '#FFD700', '#B8860B'],
     category: 'Bags',
@@ -228,15 +226,26 @@ export const products: Product[] = [
     subcategory: 'Handbags',
     description: 'Timeless design meets modern functionality. This classic handbag is a wardrobe essential that never goes out of style.',
     materials: ['Genuine Leather', 'Stainless Steel Hardware', 'Canvas Lining'],
-    sizes: ['One Size']
+    sizes: ['One Size'],
+    stock: 12,
+    rating: 4.7,
+    reviewCount: 67,
+    sku: 'OOB-CH-003',
+    specifications: [
+      { label: 'Material', value: 'Genuine Leather' },
+      { label: 'Hardware', value: 'Stainless Steel' },
+      { label: 'Lining', value: 'Canvas' },
+      { label: 'Style', value: 'Classic Handbag' }
+    ],
+    tags: ['classic', 'handbag', 'leather', 'brown', 'timeless']
   },
   {
     id: 'comfort-slippers-beige',
     name: 'Comfort Leather Slippers',
     price: 18000,
     images: [
-      '/images/products/comfort-slippers-beige-1.svg',
-      '/images/products/comfort-slippers-beige-2.svg'
+      '/images/products/comfortable-slippers.svg',
+      '/images/products/comfortable-slippers.svg'
     ],
     colors: ['#F5DEB3', '#DEB887', '#D2B48C'],
     category: 'Shoes',
@@ -244,16 +253,27 @@ export const products: Product[] = [
     description: 'Ultra-comfortable slippers made from soft leather. Perfect for lounging at home or quick errands.',
     materials: ['Soft Leather', 'Memory Foam Insole', 'Rubber Sole'],
     isNew: true,
-    sizes: ['36', '37', '38', '39', '40', '41', '42']
+    sizes: ['36', '37', '38', '39', '40', '41', '42'],
+    stock: 25,
+    rating: 4.5,
+    reviewCount: 43,
+    sku: 'OOB-CS-004',
+    specifications: [
+      { label: 'Material', value: 'Soft Leather' },
+      { label: 'Insole', value: 'Memory Foam' },
+      { label: 'Sole', value: 'Rubber' },
+      { label: 'Style', value: 'Comfort Slippers' }
+    ],
+    tags: ['comfort', 'slippers', 'leather', 'beige', 'casual']
   },
   {
     id: 'owambe-heels-red',
     name: 'Owambe Statement Heels',
     price: 32000,
     images: [
-      '/images/products/owambe-heels-red-1.svg',
-      '/images/products/owambe-heels-red-2.svg',
-      '/images/products/owambe-heels-red-3.svg'
+      '/images/products/designer-heels.svg',
+      '/images/products/designer-heels.svg',
+      '/images/products/designer-heels.svg'
     ],
     colors: ['#DC143C', '#B22222', '#8B0000'],
     category: 'Shoes',
@@ -261,7 +281,18 @@ export const products: Product[] = [
     description: 'Make a statement at your next owambe with these stunning heels. Bold, beautiful, and designed to turn heads.',
     materials: ['Patent Leather', 'Metal Heel', 'Cushioned Insole'],
     isBestSeller: true,
-    sizes: ['35', '36', '37', '38', '39', '40', '41']
+    sizes: ['35', '36', '37', '38', '39', '40', '41'],
+    stock: 18,
+    rating: 4.9,
+    reviewCount: 156,
+    sku: 'OOB-OH-005',
+    specifications: [
+      { label: 'Material', value: 'Patent Leather' },
+      { label: 'Heel', value: 'Metal' },
+      { label: 'Insole', value: 'Cushioned' },
+      { label: 'Style', value: 'Statement Heels' }
+    ],
+    tags: ['owambe', 'heels', 'red', 'statement', 'party']
   },
   {
     id: 'office-pumps-black',
@@ -276,7 +307,18 @@ export const products: Product[] = [
     subcategory: 'Office',
     description: 'Professional pumps designed for the modern working woman. Comfortable enough for all-day wear, stylish enough for any office.',
     materials: ['Leather Upper', 'Leather Lining', 'Rubber Sole'],
-    sizes: ['35', '36', '37', '38', '39', '40', '41', '42']
+    sizes: ['35', '36', '37', '38', '39', '40', '41', '42'],
+    stock: 22,
+    rating: 4.6,
+    reviewCount: 89,
+    sku: 'OOB-OP-006',
+    specifications: [
+      { label: 'Upper', value: 'Leather' },
+      { label: 'Lining', value: 'Leather' },
+      { label: 'Sole', value: 'Rubber' },
+      { label: 'Style', value: 'Professional Pumps' }
+    ],
+    tags: ['office', 'pumps', 'black', 'professional', 'work']
   },
   {
     id: 'mini-crossbody-tan',
@@ -291,7 +333,18 @@ export const products: Product[] = [
     subcategory: 'Handbags',
     description: 'A compact crossbody bag that holds all your essentials. Perfect for days when you want to travel light.',
     materials: ['Genuine Leather', 'Adjustable Strap', 'Magnetic Closure'],
-    sizes: ['One Size']
+    sizes: ['One Size'],
+    stock: 16,
+    rating: 4.4,
+    reviewCount: 52,
+    sku: 'OOB-MC-007',
+    specifications: [
+      { label: 'Material', value: 'Genuine Leather' },
+      { label: 'Strap', value: 'Adjustable' },
+      { label: 'Closure', value: 'Magnetic' },
+      { label: 'Style', value: 'Mini Crossbody' }
+    ],
+    tags: ['mini', 'crossbody', 'tan', 'compact', 'travel']
   },
   {
     id: 'weekend-tote-navy',
@@ -307,7 +360,18 @@ export const products: Product[] = [
     subcategory: 'Totes',
     description: 'Spacious and stylish, this tote is perfect for weekend getaways or daily commutes. Roomy enough for all your essentials.',
     materials: ['Canvas Exterior', 'Leather Trim', 'Interior Pockets'],
-    sizes: ['One Size']
+    sizes: ['One Size'],
+    stock: 14,
+    rating: 4.5,
+    reviewCount: 78,
+    sku: 'OOB-WT-008',
+    specifications: [
+      { label: 'Exterior', value: 'Canvas' },
+      { label: 'Trim', value: 'Leather' },
+      { label: 'Pockets', value: 'Interior' },
+      { label: 'Style', value: 'Weekend Tote' }
+    ],
+    tags: ['weekend', 'tote', 'navy', 'spacious', 'getaway']
   },
   {
     id: 'casual-flats-white',
@@ -322,7 +386,18 @@ export const products: Product[] = [
     subcategory: 'Slippers',
     description: 'Classic ballet flats that never go out of style. Comfortable and versatile for any casual occasion.',
     materials: ['Leather Upper', 'Leather Lining', 'Flexible Sole'],
-    sizes: ['35', '36', '37', '38', '39', '40', '41', '42']
+    sizes: ['35', '36', '37', '38', '39', '40', '41', '42'],
+    stock: 30,
+    rating: 4.3,
+    reviewCount: 95,
+    sku: 'OOB-CF-009',
+    specifications: [
+      { label: 'Upper', value: 'Leather' },
+      { label: 'Lining', value: 'Leather' },
+      { label: 'Sole', value: 'Flexible' },
+      { label: 'Style', value: 'Ballet Flats' }
+    ],
+    tags: ['casual', 'flats', 'white', 'ballet', 'versatile']
   },
   {
     id: 'evening-clutch-silver',
@@ -337,7 +412,18 @@ export const products: Product[] = [
     subcategory: 'Clutches',
     description: 'A shimmering silver clutch that adds glamour to any evening ensemble. Perfect for parties and special events.',
     materials: ['Metallic Leather', 'Silver Hardware', 'Satin Lining'],
-    sizes: ['One Size']
+    sizes: ['One Size'],
+    stock: 19,
+    rating: 4.7,
+    reviewCount: 61,
+    sku: 'OOB-EC-010',
+    specifications: [
+      { label: 'Material', value: 'Metallic Leather' },
+      { label: 'Hardware', value: 'Silver' },
+      { label: 'Lining', value: 'Satin' },
+      { label: 'Style', value: 'Evening Clutch' }
+    ],
+    tags: ['evening', 'clutch', 'silver', 'glamour', 'party']
   },
   {
     id: 'business-briefcase-black',
@@ -354,15 +440,26 @@ export const products: Product[] = [
     description: 'A sophisticated briefcase for the modern professional. Spacious compartments and premium materials.',
     materials: ['Full Grain Leather', 'Brass Hardware', 'Organized Interior'],
     isNew: true,
-    sizes: ['One Size']
+    sizes: ['One Size'],
+    stock: 8,
+    rating: 4.8,
+    reviewCount: 34,
+    sku: 'OOB-BB-011',
+    specifications: [
+      { label: 'Material', value: 'Full Grain Leather' },
+      { label: 'Hardware', value: 'Brass' },
+      { label: 'Interior', value: 'Organized' },
+      { label: 'Style', value: 'Professional Briefcase' }
+    ],
+    tags: ['business', 'briefcase', 'black', 'professional', 'premium']
   },
   {
     id: 'party-heels-gold',
     name: 'Party Gold Heels',
     price: 30000,
     images: [
-      '/images/products/party-heels-gold-1.svg',
-      '/images/products/party-heels-gold-2.svg'
+      '/images/products/designer-heels.svg',
+      '/images/products/designer-heels.svg'
     ],
     colors: ['#FFD700', '#C7A955', '#B8860B'],
     category: 'Shoes',
@@ -370,7 +467,18 @@ export const products: Product[] = [
     description: 'Stunning gold heels perfect for parties and celebrations. Comfortable heel height with maximum style impact.',
     materials: ['Metallic Leather', 'Gold Hardware', 'Cushioned Insole'],
     isOutOfStock: true,
-    sizes: ['35', '36', '37', '38', '39', '40', '41']
+    sizes: ['35', '36', '37', '38', '39', '40', '41'],
+    stock: 0,
+    rating: 4.9,
+    reviewCount: 127,
+    sku: 'OOB-PH-012',
+    specifications: [
+      { label: 'Material', value: 'Metallic Leather' },
+      { label: 'Hardware', value: 'Gold' },
+      { label: 'Insole', value: 'Cushioned' },
+      { label: 'Style', value: 'Party Heels' }
+    ],
+    tags: ['party', 'heels', 'gold', 'celebration', 'stunning']
   }
 ]
 

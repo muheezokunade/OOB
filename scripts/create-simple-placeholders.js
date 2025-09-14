@@ -78,3 +78,5 @@ images.forEach(image => {
 console.log('All placeholder images created as SVG files!');
 console.log('Note: These are SVG files with .svg extension. For production, convert to actual JPG/PNG files.');
 
+
+

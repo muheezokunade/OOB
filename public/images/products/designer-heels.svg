@@ -1,0 +1,11 @@
+
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="600" fill="#000000"/>
+  <rect x="50" y="50" width="700" height="500" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-dasharray="10,5"/>
+  <text x="400" y="300" font-family="Arial, sans-serif" font-size="48" font-weight="bold" text-anchor="middle" fill="#FFFFFF">
+    Designer Heels
+  </text>
+  <text x="400" y="350" font-family="Arial, sans-serif" font-size="24" text-anchor="middle" fill="#FFFFFF" opacity="0.8">
+    OmoOniBag
+  </text>
+</svg>

@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { PrismaClient } from '@prisma/client'
+import { db as prisma } from '@/lib/db'
 import { AuthService } from '@/lib/auth'
-
-const prisma = new PrismaClient()
 
 // GET /api/banners - Get all banners (public)
 export async function GET(request: NextRequest) {

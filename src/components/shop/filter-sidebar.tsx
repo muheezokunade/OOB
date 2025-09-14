@@ -385,3 +385,5 @@ export function FilterSidebar({ allProducts, isOpen, onClose }: FilterSidebarPro
   )
 }
 
+
+

@@ -388,7 +388,8 @@ export default function AdminOrdersPage() {
                     </div>
                   </td>
                 </tr>
-              ))}
+                ))
+              )}
             </tbody>
           </table>
         </div>

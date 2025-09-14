@@ -352,3 +352,5 @@ export const getPriceRange = (products: Product[]): [number, number] => {
   return [Math.min(...prices), Math.max(...prices)]
 }
 
+
+

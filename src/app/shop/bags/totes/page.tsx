@@ -7,3 +7,5 @@ export default function TotesPage() {
   return <BagsPage />
 }
 
+
+

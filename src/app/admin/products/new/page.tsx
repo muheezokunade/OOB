@@ -5,6 +5,7 @@ import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
+import { ProductImageUpload } from '@/components/ui/image-upload'
 import { 
   Package, 
   Save,
@@ -20,11 +21,24 @@ export default function AddProductPage() {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
+    longDescription: '',
     price: '',
+    originalPrice: '',
     category: '',
+    subcategory: '',
     sku: '',
     stock: '',
+    weight: '',
+    dimensions: '',
+    materials: [] as string[],
+    sizes: [] as string[],
+    colors: [] as string[],
+    careInstructions: [] as string[],
+    tags: [] as string[],
     images: [] as string[],
+    isActive: true,
+    isNew: false,
+    isBestSeller: false,
     variants: [] as Array<{
       id: string
       name: string
@@ -140,7 +154,7 @@ export default function AddProductPage() {
                 required
               />
             </div>
-            <div className="md:col-span-2">
+            <div>
               <label className="block text-sm font-medium text-ink mb-2">Category</label>
               <select
                 value={formData.category}
@@ -149,9 +163,35 @@ export default function AddProductPage() {
                 required
               >
                 <option value="">Select category</option>
-                <option value="bags">Bags</option>
-                <option value="shoes">Shoes</option>
-                <option value="accessories">Accessories</option>
+                <option value="Bags">Bags</option>
+                <option value="Shoes">Shoes</option>
+                <option value="Accessories">Accessories</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-ink mb-2">Subcategory</label>
+              <select
+                value={formData.subcategory}
+                onChange={(e) => setFormData(prev => ({ ...prev, subcategory: e.target.value }))}
+                className="w-full px-3 py-2 border border-border rounded-md text-sm bg-background"
+              >
+                <option value="">Select subcategory</option>
+                {formData.category === 'Bags' && (
+                  <>
+                    <option value="Totes">Totes</option>
+                    <option value="Handbags">Handbags</option>
+                    <option value="Clutches">Clutches</option>
+                    <option value="Crossbody">Crossbody</option>
+                  </>
+                )}
+                {formData.category === 'Shoes' && (
+                  <>
+                    <option value="Heels">Heels</option>
+                    <option value="Slippers">Slippers</option>
+                    <option value="Office">Office</option>
+                    <option value="Owambe">Owambe</option>
+                  </>
+                )}
               </select>
             </div>
             <div className="md:col-span-2">
@@ -164,6 +204,145 @@ export default function AddProductPage() {
                 required
               />
             </div>
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium text-ink mb-2">Long Description</label>
+              <textarea
+                value={formData.longDescription}
+                onChange={(e) => setFormData(prev => ({ ...prev, longDescription: e.target.value }))}
+                className="w-full px-3 py-2 border border-border rounded-md text-sm bg-background min-h-[100px]"
+                placeholder="Detailed product description"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-ink mb-2">Weight (kg)</label>
+              <input
+                type="number"
+                step="0.1"
+                value={formData.weight}
+                onChange={(e) => setFormData(prev => ({ ...prev, weight: e.target.value }))}
+                className="w-full px-3 py-2 border border-border rounded-md text-sm bg-background"
+                placeholder="0.0"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-ink mb-2">Dimensions</label>
+              <input
+                type="text"
+                value={formData.dimensions}
+                onChange={(e) => setFormData(prev => ({ ...prev, dimensions: e.target.value }))}
+                className="w-full px-3 py-2 border border-border rounded-md text-sm bg-background"
+                placeholder="e.g., 40cm x 30cm x 15cm"
+              />
+            </div>
+          </div>
+        </Card>
+
+        {/* Product Details */}
+        <Card className="p-6">
+          <h2 className="text-xl font-semibold text-ink mb-4">Product Details</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-ink mb-2">Materials</label>
+              <input
+                type="text"
+                value={formData.materials.join(', ')}
+                onChange={(e) => setFormData(prev => ({ 
+                  ...prev, 
+                  materials: e.target.value.split(',').map(m => m.trim()).filter(m => m) 
+                }))}
+                className="w-full px-3 py-2 border border-border rounded-md text-sm bg-background"
+                placeholder="e.g., Italian Leather, Brass Hardware"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-ink mb-2">Sizes</label>
+              <input
+                type="text"
+                value={formData.sizes.join(', ')}
+                onChange={(e) => setFormData(prev => ({ 
+                  ...prev, 
+                  sizes: e.target.value.split(',').map(s => s.trim()).filter(s => s) 
+                }))}
+                className="w-full px-3 py-2 border border-border rounded-md text-sm bg-background"
+                placeholder="e.g., UK 5, UK 6, UK 7"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-ink mb-2">Colors (Hex codes)</label>
+              <input
+                type="text"
+                value={formData.colors.join(', ')}
+                onChange={(e) => setFormData(prev => ({ 
+                  ...prev, 
+                  colors: e.target.value.split(',').map(c => c.trim()).filter(c => c) 
+                }))}
+                className="w-full px-3 py-2 border border-border rounded-md text-sm bg-background"
+                placeholder="e.g., #0B0B0B, #8B4513, #654321"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-ink mb-2">Care Instructions</label>
+              <input
+                type="text"
+                value={formData.careInstructions.join(', ')}
+                onChange={(e) => setFormData(prev => ({ 
+                  ...prev, 
+                  careInstructions: e.target.value.split(',').map(c => c.trim()).filter(c => c) 
+                }))}
+                className="w-full px-3 py-2 border border-border rounded-md text-sm bg-background"
+                placeholder="e.g., Wipe with dry cloth, Store in dust bag"
+              />
+            </div>
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium text-ink mb-2">Tags</label>
+              <input
+                type="text"
+                value={formData.tags.join(', ')}
+                onChange={(e) => setFormData(prev => ({ 
+                  ...prev, 
+                  tags: e.target.value.split(',').map(t => t.trim()).filter(t => t) 
+                }))}
+                className="w-full px-3 py-2 border border-border rounded-md text-sm bg-background"
+                placeholder="e.g., luxury, leather, professional, tote"
+              />
+            </div>
+          </div>
+        </Card>
+
+        {/* Product Status */}
+        <Card className="p-6">
+          <h2 className="text-xl font-semibold text-ink mb-4">Product Status</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                id="isActive"
+                checked={formData.isActive}
+                onChange={(e) => setFormData(prev => ({ ...prev, isActive: e.target.checked }))}
+                className="rounded border-border"
+              />
+              <label htmlFor="isActive" className="text-sm font-medium text-ink">Active</label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                id="isNew"
+                checked={formData.isNew}
+                onChange={(e) => setFormData(prev => ({ ...prev, isNew: e.target.checked }))}
+                className="rounded border-border"
+              />
+              <label htmlFor="isNew" className="text-sm font-medium text-ink">New Product</label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                id="isBestSeller"
+                checked={formData.isBestSeller}
+                onChange={(e) => setFormData(prev => ({ ...prev, isBestSeller: e.target.checked }))}
+                className="rounded border-border"
+              />
+              <label htmlFor="isBestSeller" className="text-sm font-medium text-ink">Best Seller</label>
+            </div>
           </div>
         </Card>
 
@@ -171,23 +350,33 @@ export default function AddProductPage() {
         <Card className="p-6">
           <h2 className="text-xl font-semibold text-ink mb-4">Product Images</h2>
           <div className="space-y-4">
-            <div className="border-2 border-dashed border-gold/30 rounded-lg p-8 text-center">
-              <Upload className="w-12 h-12 text-gold mx-auto mb-4" />
-              <p className="text-ink/60 mb-2">Upload product images</p>
-              <p className="text-sm text-muted-foreground">Drag and drop or click to browse</p>
-            </div>
+            <ProductImageUpload
+              value={formData.images[0] || ''}
+              onChange={(url) => {
+                if (url && !formData.images.includes(url)) {
+                  setFormData(prev => ({
+                    ...prev,
+                    images: [...prev.images, url]
+                  }))
+                }
+              }}
+              category={formData.category || 'general'}
+            />
+            
             {formData.images.length > 0 && (
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {formData.images.map((image, index) => (
                   <div key={index} className="relative">
-                    <div className="aspect-square bg-gradient-to-br from-fog to-stone rounded-lg flex items-center justify-center">
-                      <Package className="w-8 h-8 text-ink/60" />
-                    </div>
+                    <img
+                      src={image}
+                      alt={`Product image ${index + 1}`}
+                      className="aspect-square object-cover rounded-lg border border-gold/20"
+                    />
                     <Button
                       type="button"
                       variant="ghost"
                       size="sm"
-                      className="absolute top-2 right-2 h-6 w-6 p-0 text-red-600 hover:text-red-700"
+                      className="absolute top-2 right-2 h-6 w-6 p-0 text-red-600 hover:text-red-700 bg-white/80 hover:bg-white"
                       onClick={() => setFormData(prev => ({
                         ...prev,
                         images: prev.images.filter((_, i) => i !== index)
@@ -317,3 +506,4 @@ export default function AddProductPage() {
     </div>
   )
 }
+

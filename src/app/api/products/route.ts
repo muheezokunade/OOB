@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { db } from '@/lib/db'
-import { ProductSearchService } from '@/lib/search'
+import { productStorage } from '@/lib/product-storage'
 
 // GET /api/products - Get all products with optional filtering
 export async function GET(request: NextRequest) {
@@ -18,24 +17,101 @@ export async function GET(request: NextRequest) {
     const page = parseInt(searchParams.get('page') || '1')
     const limit = parseInt(searchParams.get('limit') || '12')
 
-    // Use the advanced search service
-    const searchResult = await ProductSearchService.search({
-      query: search || undefined,
-      category: category || undefined,
-      subcategory: subcategory || undefined,
-      minPrice: minPrice ? parseFloat(minPrice) : undefined,
-      maxPrice: maxPrice ? parseFloat(maxPrice) : undefined,
-      colors: colors ? colors.split(',') : undefined,
-      sizes: sizes ? sizes.split(',') : undefined,
-      materials: materials ? materials.split(',') : undefined,
-      sortBy: sort as any,
-      page,
-      limit
-    })
+    let products = productStorage.getActive()
+
+    // Apply filters
+    if (search) {
+      products = productStorage.search(search).filter(p => p.isActive)
+    }
+
+    if (category && category !== 'all') {
+      products = products.filter(p => p.category === category)
+    }
+
+    if (subcategory && subcategory !== 'all') {
+      products = products.filter(p => p.subcategory === subcategory)
+    }
+
+    if (minPrice) {
+      products = products.filter(p => p.price >= parseFloat(minPrice))
+    }
+
+    if (maxPrice) {
+      products = products.filter(p => p.price <= parseFloat(maxPrice))
+    }
+
+    if (colors) {
+      const colorList = colors.split(',')
+      products = products.filter(p => 
+        p.colors.some(color => colorList.includes(color))
+      )
+    }
+
+    if (sizes) {
+      const sizeList = sizes.split(',')
+      products = products.filter(p => 
+        p.sizes.some(size => sizeList.includes(size))
+      )
+    }
+
+    if (materials) {
+      const materialList = materials.split(',')
+      products = products.filter(p => 
+        p.materials.some(material => materialList.includes(material))
+      )
+    }
+
+    // Apply sorting
+    if (sort) {
+      switch (sort) {
+        case 'price-low':
+          products.sort((a, b) => a.price - b.price)
+          break
+        case 'price-high':
+          products.sort((a, b) => b.price - a.price)
+          break
+        case 'newest':
+          products.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+          break
+        case 'oldest':
+          products.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+          break
+        case 'name':
+          products.sort((a, b) => a.name.localeCompare(b.name))
+          break
+      }
+    }
+
+    // Pagination
+    const total = products.length
+    const startIndex = (page - 1) * limit
+    const endIndex = startIndex + limit
+    const paginatedProducts = products.slice(startIndex, endIndex)
 
     return NextResponse.json({
       success: true,
-      data: searchResult
+      data: {
+        products: paginatedProducts,
+        pagination: {
+          page,
+          limit,
+          total,
+          totalPages: Math.ceil(total / limit),
+          hasNext: page * limit < total,
+          hasPrev: page > 1
+        },
+        filters: {
+          categories: [...new Set(products.map(p => p.category))],
+          subcategories: [...new Set(products.map(p => p.subcategory))],
+          colors: [...new Set(products.flatMap(p => p.colors))],
+          sizes: [...new Set(products.flatMap(p => p.sizes))],
+          materials: [...new Set(products.flatMap(p => p.materials))],
+          priceRange: {
+            min: Math.min(...products.map(p => p.price)),
+            max: Math.max(...products.map(p => p.price))
+          }
+        }
+      }
     })
   } catch (error) {
     console.error('Error fetching products:', error)

@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import { useState } from 'react'
 import { cn } from '@/lib/utils'
-import { getOptimizedImageUrl } from '@/lib/cloudinary'
+import { getOptimizedImageUrl } from '@/lib/cloudinary-client'
 
 interface CloudinaryImageProps {
   src: string
@@ -47,21 +47,8 @@ export function CloudinaryImage({
   const [isLoading, setIsLoading] = useState(true)
   const [hasError, setHasError] = useState(false)
 
-  // Check if the image is already a Cloudinary URL
-  const isCloudinaryUrl = src.includes('cloudinary.com')
-  
-  // If it's not a Cloudinary URL, use it as is (for local images)
-  const imageSrc = isCloudinaryUrl 
-    ? getOptimizedImageUrl(src, {
-        width: fill ? undefined : width,
-        height: fill ? undefined : height,
-        quality,
-        crop,
-        gravity,
-        effect,
-        radius: radius ? `${radius}px` : undefined
-      })
-    : src
+  // Bypass Cloudinary processing - use direct URLs
+  const imageSrc = src
 
   const handleLoad = () => {
     setIsLoading(false)
@@ -87,7 +74,10 @@ export function CloudinaryImage({
   }
 
   return (
-    <div className={cn("relative overflow-hidden", className)}>
+    <div
+      className={cn("relative overflow-hidden", className)}
+      style={fill ? { width: '100%', height: '100%' } : { width, height }}
+    >
       {isLoading && (
         <div 
           className="absolute inset-0 bg-gray-100 animate-pulse flex items-center justify-center"
@@ -105,7 +95,8 @@ export function CloudinaryImage({
         fill={fill}
         className={cn(
           "transition-opacity duration-300",
-          isLoading ? "opacity-0" : "opacity-100"
+          isLoading ? "opacity-0" : "opacity-100",
+          className
         )}
         priority={priority}
         placeholder={placeholder}
@@ -156,3 +147,4 @@ export function ProductImage({ src, alt, size = 'medium', ...props }: Cloudinary
     />
   )
 }
+

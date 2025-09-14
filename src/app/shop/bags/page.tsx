@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { Search, Filter, Grid3X3, List, SortAsc } from 'lucide-react'
 import { getProductsByCategory, getPriceRange } from '@/data/products'
@@ -22,7 +22,7 @@ import { Pagination } from '@/components/ui/pagination'
 import { ProductCard } from '@/components/product-card'
 import { cn } from '@/lib/utils'
 
-export default function BagsPage() {
+function BagsPageContent() {
   const searchParams = useSearchParams()
   // Get subcategory from URL path or search params
   const pathSegments = typeof window !== 'undefined' ? window.location.pathname.split('/') : []
@@ -296,5 +296,13 @@ export default function BagsPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function BagsPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <BagsPageContent />
+    </Suspense>
   )
 }

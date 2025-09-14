@@ -206,3 +206,4 @@ export function withAdminAuth<P extends object>(
     return <Component {...props} />
   }
 }
+

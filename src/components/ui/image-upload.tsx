@@ -49,28 +49,15 @@ export function ImageUpload({
     setUploading(true)
 
     try {
-      const formData = new FormData()
-      formData.append('file', file)
-      formData.append('folder', folder)
-      if (tags) formData.append('tags', tags)
-
-      const token = localStorage.getItem('adminToken')
-      const response = await fetch('/api/upload/cloudinary', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        },
-        body: formData
-      })
-
-      if (!response.ok) {
-        const error = await response.json()
-        throw new Error(error.error || 'Upload failed')
+      // Create a direct URL from the file (bypass Cloudinary)
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        const result = e.target?.result as string
+        console.log('Direct upload result:', result)
+        onChange(result)
+        toast.success('Image uploaded successfully!')
       }
-
-      const result = await response.json()
-      onChange(result.data.secure_url)
-      toast.success('Image uploaded successfully!')
+      reader.readAsDataURL(file)
     } catch (error) {
       console.error('Upload error:', error)
       toast.error(error instanceof Error ? error.message : 'Upload failed')
@@ -124,13 +111,18 @@ export function ImageUpload({
     <div className={className}>
       {value ? (
         <div className="relative group">
-          <CloudinaryImage
-            src={value}
-            alt="Uploaded image"
-            width={200}
-            height={200}
-            className="w-full h-48 object-cover rounded-lg border border-gray-200"
-          />
+          <div className="w-full h-48 rounded-lg border border-gray-200 overflow-hidden">
+            <img
+              src={value}
+              alt="Uploaded image"
+              className="w-full h-full object-cover"
+              onLoad={() => console.log('Image loaded successfully:', value)}
+              onError={(e) => {
+                console.error('Image load error for URL:', value, e)
+                e.currentTarget.style.display = 'none'
+              }}
+            />
+          </div>
           {!disabled && (
             <Button
               type="button"
@@ -229,3 +221,4 @@ export function ProductImageUpload({
     />
   )
 }
+
