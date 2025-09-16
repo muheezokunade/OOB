@@ -12,10 +12,11 @@ import { Badge } from '@/components/ui/badge'
 import { ProductCard } from '@/components/product-card'
 import { formatCurrency } from '@/store/cart-store'
 import { AuthModal } from '@/components/auth/auth-modal'
+import { products } from '@/data/products'
 
 export default function WishlistPage() {
   const { isAuthenticated, openAuthModal } = useAuthStore()
-  const { wishlistItems, removeFromWishlist, clearWishlist } = useWishlistStore()
+  const { items, removeFromWishlist, clearWishlist } = useWishlistStore()
   const { addItem, openCart } = useCartStore()
   const router = useRouter()
 
@@ -30,10 +31,13 @@ export default function WishlistPage() {
       id: product.id,
       name: product.name,
       price: product.price,
-      image: product.image,
+      image: product.image || product.images?.[0],
+      category: product.category,
+      subcategory: product.subcategory,
+      inStock: (product as any).stock ? (product as any).stock > 0 : true,
       quantity: 1,
-      size: product.variants?.sizes?.[0] || 'One Size',
-      color: product.variants?.colors?.[0] || 'Default'
+      size: (product as any).variants?.sizes?.[0] || 'One Size',
+      color: (product as any).variants?.colors?.[0] || 'Default'
     })
     openCart()
   }
@@ -43,15 +47,20 @@ export default function WishlistPage() {
   }
 
   const handleMoveAllToCart = () => {
-    wishlistItems.forEach(product => {
+    items.forEach(it => {
+      const product = products.find(p => p.id === it.productId)
+      if (!product) return
       addItem({
         id: product.id,
         name: product.name,
         price: product.price,
-        image: product.image,
+        image: product.images?.[0] || (product as any).image,
+        category: product.category,
+        subcategory: product.subcategory,
+        inStock: (product as any).stock ? (product as any).stock > 0 : true,
         quantity: 1,
-        size: product.variants?.sizes?.[0] || 'One Size',
-        color: product.variants?.colors?.[0] || 'Default'
+        size: (product as any).variants?.sizes?.[0] || 'One Size',
+        color: (product as any).variants?.colors?.[0] || 'Default'
       })
     })
     clearWishlist()
@@ -86,12 +95,12 @@ export default function WishlistPage() {
           <div>
             <h1 className="text-3xl font-serif font-semibold text-ink">My Wishlist</h1>
             <p className="text-ink/60">
-              {wishlistItems.length} {wishlistItems.length === 1 ? 'item' : 'items'} saved
+              {items.length} {items.length === 1 ? 'item' : 'items'} saved
             </p>
           </div>
         </div>
 
-        {wishlistItems.length === 0 ? (
+        {items.length === 0 ? (
           <Card className="bg-gradient-to-b from-cream to-fog/30 border-gold/20">
             <CardContent className="p-8 text-center">
               <Heart className="w-16 h-16 text-ink/30 mx-auto mb-4" />
@@ -115,10 +124,13 @@ export default function WishlistPage() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
                     <Badge variant="secondary" className="bg-gold/10 text-gold border-gold/20">
-                      {wishlistItems.length} items
+                      {items.length} items
                     </Badge>
                     <p className="text-sm text-ink/60">
-                      Total value: {formatCurrency(wishlistItems.reduce((sum, item) => sum + item.price, 0))}
+                      Total value: {formatCurrency(items.reduce((sum: number, it) => {
+                        const p = products.find(pr => pr.id === it.productId)
+                        return sum + (p?.price || 0)
+                      }, 0))}
                     </p>
                   </div>
                   <div className="flex gap-2">
@@ -144,7 +156,10 @@ export default function WishlistPage() {
 
             {/* Wishlist Items */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {wishlistItems.map((product) => (
+              {items.map((it) => {
+                const product = products.find(p => p.id === it.productId)
+                if (!product) return null
+                return (
                 <Card key={product.id} className="bg-gradient-to-b from-cream to-fog/30 border-gold/20 group hover:shadow-lg transition-all duration-300">
                   <CardContent className="p-0">
                     {/* Product Image */}
@@ -226,7 +241,8 @@ export default function WishlistPage() {
                     </div>
                   </CardContent>
                 </Card>
-              ))}
+                )
+              })}
             </div>
 
             {/* Bottom Actions */}

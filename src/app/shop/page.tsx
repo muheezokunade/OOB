@@ -1,10 +1,10 @@
 'use client'
 
-import { useEffect, Suspense } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { Search, Filter, Grid3X3, List, SortAsc } from 'lucide-react'
-import { products, getPriceRange } from '@/data/products'
-import { useShopStore, sortOptions } from '@/store/shop-store'
+import { Product } from '@/data/products'
+import { useShopStore, sortOptions, getPriceRange } from '@/store/shop-store'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
@@ -25,6 +25,8 @@ import { cn } from '@/lib/utils'
 function ShopPageContent() {
   const searchParams = useSearchParams()
   const category = searchParams.get('category')
+  const [allProducts, setAllProducts] = useState<Product[]>([])
+  const [loading, setLoading] = useState<boolean>(false)
   
   const {
     filters,
@@ -44,24 +46,43 @@ function ShopPageContent() {
     filterProducts
   } = useShopStore()
 
-  // Set up initial filters
+  // Fetch products from API so newly added products appear
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true)
+        const res = await fetch('/api/products?limit=1000')
+        if (!res.ok) throw new Error('Failed to load products')
+        const json = await res.json()
+        const fetched: Product[] = json?.data?.products || []
+        setAllProducts(fetched)
+        const [, maxPrice] = getPriceRange(fetched)
+        setFilter('maxPrice', maxPrice)
+        setFilter('priceRange', [0, maxPrice])
+      } catch (err) {
+        // If API fails, leave list empty; UI will show no results
+        setAllProducts([])
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchProducts()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  // Set up initial filters when category changes
   useEffect(() => {
     if (category) {
       setFilter('category', category)
     } else {
       setFilter('category', undefined)
     }
-    
-    // Set price range based on all products
-    const [minPrice, maxPrice] = getPriceRange(products)
-    setFilter('maxPrice', maxPrice)
-    setFilter('priceRange', [0, maxPrice])
   }, [category, setFilter])
 
-  // Filter products when filters change
+  // Filter products when filters or source list change
   useEffect(() => {
-    filterProducts(products)
-  }, [filters, activeSort, currentPage, filterProducts])
+    filterProducts(allProducts)
+  }, [filters, activeSort, currentPage, allProducts, filterProducts])
 
   const handleSearch = (value: string) => {
     setSearchQuery(value)
@@ -207,7 +228,7 @@ function ShopPageContent() {
           {/* Filter Sidebar */}
           <div className="hidden lg:block w-80 flex-shrink-0">
             <FilterSidebar 
-              allProducts={products}
+              allProducts={allProducts}
               isOpen={isFiltersOpen}
               onClose={() => {}}
             />
@@ -216,7 +237,7 @@ function ShopPageContent() {
           {/* Mobile Filter Sidebar */}
           <div className="lg:hidden">
             <FilterSidebar 
-              allProducts={products}
+              allProducts={allProducts}
               isOpen={isFiltersOpen}
               onClose={toggleFilters}
             />

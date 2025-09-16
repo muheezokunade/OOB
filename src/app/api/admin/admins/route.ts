@@ -138,7 +138,7 @@ export async function POST(request: NextRequest) {
     const hashedPassword = await AuthService.hashPassword(password)
 
     // Get permissions for the role
-    const permissions = ROLE_PERMISSIONS[role] || []
+    const permissions = (ROLE_PERMISSIONS as any)[role] || []
 
     // Create admin
     const newAdmin = await db.admin.create({

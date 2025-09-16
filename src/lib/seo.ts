@@ -97,24 +97,26 @@ export function generateMetadata(config: SEOConfig): Metadata {
 
   // Add structured data for products
   if (type === 'product' && price) {
-    metadata.other = {
+    const other: Record<string, string | number> = {
       'product:price:amount': price.toString(),
       'product:price:currency': currency,
       'product:availability': availability || 'in stock',
       'product:brand': brand,
-      'product:category': category
     }
+    if (category) other['product:category'] = category
+    metadata.other = other
   }
 
   // Add article metadata
   if (type === 'article') {
-    metadata.other = {
-      'article:author': author,
-      'article:section': section,
+    const other: Record<string, string | number> = {
       'article:tag': tags.join(', '),
-      'article:published_time': publishedTime,
-      'article:modified_time': modifiedTime
     }
+    if (author) other['article:author'] = author
+    if (section) other['article:section'] = section
+    if (publishedTime) other['article:published_time'] = publishedTime
+    if (modifiedTime) other['article:modified_time'] = modifiedTime
+    metadata.other = other
   }
 
   return metadata

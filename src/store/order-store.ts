@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { CartItem } from './cart-store'
+import { CartItem } from '@/types/cart'
 import { Address } from './auth-store'
 
 export interface Order {
@@ -48,6 +48,7 @@ export interface ShippingMethod {
   price: number
   estimatedDays: string
   carrier?: string
+  features?: string[]
 }
 
 export interface OrderTracking {

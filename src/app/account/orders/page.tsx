@@ -14,7 +14,7 @@ import { AuthModal } from '@/components/auth/auth-modal'
 
 export default function OrdersPage() {
   const { isAuthenticated, openAuthModal } = useAuthStore()
-  const { orders, getOrderStatus, getOrderTracking } = useOrderStore()
+  const { orders } = useOrderStore()
   const router = useRouter()
 
   useEffect(() => {
@@ -64,11 +64,7 @@ export default function OrdersPage() {
   }
 
   const handleTrackOrder = (orderId: string) => {
-    const tracking = getOrderTracking(orderId)
-    if (tracking) {
-      // In a real app, this would open the tracking page
-      console.log('Tracking order:', tracking)
-    }
+    console.log('Track order', orderId)
   }
 
   return (

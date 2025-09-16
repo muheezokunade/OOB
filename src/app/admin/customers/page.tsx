@@ -24,20 +24,15 @@ import {
 
 interface Customer {
   id: string
-  firstName: string
-  lastName: string
+  name: string
   email: string
   phone?: string
-  createdAt: string
-  lastLogin?: string
-  isActive: boolean
-  _count: {
-    orders: number
-    reviews: number
-  }
-  orders?: Array<{
-    total: number
-  }>
+  location: string
+  registrationDate: string
+  lastActive: string
+  totalOrders: number
+  totalSpent: number
+  status: 'active' | 'inactive' | 'blocked'
 }
 
 // Mock customer data (fallback)
@@ -124,13 +119,8 @@ export default function AdminCustomersPage() {
       
       const response = await fetch(`/api/admin/users?${params}`)
       const data = await response.json()
-      
-      if (data.success) {
-        setCustomers(data.data.users)
-      } else {
-        // Fallback to mock data
-        setCustomers(mockCustomers as any)
-      }
+      const list: Customer[] = data?.data?.users ?? (mockCustomers as any)
+      setCustomers(list)
     } catch (error) {
       console.error('Failed to fetch customers:', error)
       // Fallback to mock data
@@ -145,7 +135,7 @@ export default function AdminCustomersPage() {
   const filteredCustomers = customers.filter(customer => {
     const matchesSearch = customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          customer.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         customer.phone.includes(searchTerm) ||
+                         (customer.phone?.includes(searchTerm) ?? false) ||
                          customer.location.toLowerCase().includes(searchTerm.toLowerCase())
     const matchesStatus = statusFilter === 'all' || customer.status === statusFilter
     return matchesSearch && matchesStatus
@@ -331,7 +321,7 @@ export default function AdminCustomersPage() {
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 bg-gradient-to-br from-gold to-yellow-400 rounded-full flex items-center justify-center">
                           <span className="text-ink font-semibold text-sm">
-                            {customer.name.split(' ').map(n => n[0]).join('')}
+                            {customer.name.split(' ').map((n: string) => n[0]).join('')}
                           </span>
                         </div>
                         <div>

@@ -48,7 +48,7 @@ export default async function Home() {
                 </h1>
                 
                 <p className="text-xl text-muted-foreground leading-relaxed max-w-lg">
-                  {homepage?.heroSubtitle ?? 'Handcrafted bags and shoes that tell your story. From Lagos boardrooms to Abuja galas, we create pieces that elevate your everyday into something extraordinary.'}
+                  {homepage?.heroSubtitle ?? 'Bags and shoes that tell your story. From Lagos boardrooms to Abuja galas, we create pieces that elevate your everyday into something extraordinary.'}
                 </p>
               </div>
 
@@ -83,11 +83,7 @@ export default async function Home() {
 
             {/* Right Visual - Dynamic Banner */}
             <div className="relative">
-              {homepage?.heroImage ? (
-                <Image src={homepage.heroImage} alt="Hero" fill className="object-cover rounded-2xl" />
-              ) : (
-                <HeroBanner />
-              )}
+              <HeroBanner />
             </div>
           </div>
         </div>

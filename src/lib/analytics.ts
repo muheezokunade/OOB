@@ -79,8 +79,8 @@ export class AnalyticsService {
     document.head.appendChild(script)
 
     // Initialize fbq
-    window.fbq = window.fbq || function() {
-      (window.fbq.q = window.fbq.q || []).push(arguments)
+    ;(window as any).fbq = (window as any).fbq || function() {
+      ;((window as any).fbq.q = (window as any).fbq.q || []).push(arguments)
     }
   }
 

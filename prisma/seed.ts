@@ -343,6 +343,44 @@ async function main() {
 
   console.log(`✅ Created ${subscribers.length} newsletter subscribers`)
 
+  // Create homepage content
+  const existingHomepage = await prisma.homepageContent.findFirst()
+  
+  if (!existingHomepage) {
+    const homepageContent = await prisma.homepageContent.create({
+      data: {
+        heroTitle: 'Every Girl Deserves Her Perfect Moment',
+        heroSubtitle: 'Bags and shoes that tell your story. From Lagos boardrooms to Abuja galas, we create pieces that elevate your everyday into something extraordinary.',
+        heroButtonText: 'Explore Collection',
+        heroButtonLink: '/shop',
+        heroImage: '/images/hero/main-hero.svg',
+        featuredTitle: 'Featured Products',
+        featuredSubtitle: 'Discover our handpicked selection of premium items',
+        featuredProducts: [],
+        isActive: true
+      }
+    })
+    console.log('✅ Created homepage content')
+  } else {
+    // Update existing homepage content
+    const updatedHomepage = await prisma.homepageContent.update({
+      where: { id: existingHomepage.id },
+      data: {
+        heroTitle: 'Every Girl Deserves Her Perfect Moment',
+        heroSubtitle: 'Bags and shoes that tell your story. From Lagos boardrooms to Abuja galas, we create pieces that elevate your everyday into something extraordinary.',
+        heroButtonText: 'Explore Collection',
+        heroButtonLink: '/shop',
+        heroImage: '/images/hero/main-hero.svg',
+        featuredTitle: 'Featured Products',
+        featuredSubtitle: 'Discover our handpicked selection of premium items',
+        featuredProducts: [],
+        isActive: true,
+        updatedAt: new Date()
+      }
+    })
+    console.log('✅ Updated homepage content')
+  }
+
   console.log('🎉 Database seeding completed successfully!')
 }
 

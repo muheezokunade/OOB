@@ -9,9 +9,11 @@ import { Badge } from '@/components/ui/badge'
 import { PaymentData } from '@/store/order-store'
 import { cn } from '@/lib/utils'
 
+type PaymentMethod = 'card' | 'bank_transfer' | 'paystack' | 'flutterwave'
+
 interface PaymentFormProps {
-  selectedPaymentMethod: string | null
-  onSelectPaymentMethod: (method: string) => void
+  selectedPaymentMethod: PaymentMethod | null
+  onSelectPaymentMethod: (method: PaymentMethod) => void
   paymentData: PaymentData | null
   setPaymentData: (data: PaymentData) => void
 }
@@ -80,24 +82,21 @@ export function PaymentForm({
     // Update payment data
     if (selectedPaymentMethod === 'card') {
       setPaymentData({
-        method: 'card',
-        cardData: newCardData
+        method: 'card'
       })
     }
   }
 
-  const handlePaymentMethodSelect = (methodId: string) => {
+  const handlePaymentMethodSelect = (methodId: PaymentMethod) => {
     onSelectPaymentMethod(methodId)
     
     if (methodId === 'card') {
       setPaymentData({
-        method: 'card',
-        cardData
+        method: 'card'
       })
     } else {
       setPaymentData({
-        method: methodId,
-        cardData: null
+        method: methodId
       })
     }
   }
@@ -125,7 +124,7 @@ export function PaymentForm({
                       ? "border-gold bg-gold/5"
                       : "border-gold/20 hover:border-gold/40"
                   )}
-                  onClick={() => handlePaymentMethodSelect(method.id)}
+                  onClick={() => handlePaymentMethodSelect(method.id as PaymentMethod)}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">

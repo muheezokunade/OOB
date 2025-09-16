@@ -25,10 +25,10 @@ interface HomepageContent {
 
 export default function HomepageManagement() {
   const [content, setContent] = useState<HomepageContent>({
-    heroTitle: 'The Latest & Greatest',
-    heroSubtitle: 'Hot off our design table. These pieces represent the future of Nigerian luxury fashion.',
+    heroTitle: 'Every Girl Deserves Her Perfect Moment',
+    heroSubtitle: 'Bags and shoes that tell your story. From Lagos boardrooms to Abuja galas, we create pieces that elevate your everyday into something extraordinary.',
     heroImage: '',
-    heroButtonText: 'Shop Now',
+    heroButtonText: 'Explore Collection',
     heroButtonLink: '/shop',
     featuredTitle: 'Featured Products',
     featuredSubtitle: 'Discover our handpicked selection of premium items',

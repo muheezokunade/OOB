@@ -30,3 +30,5 @@ products.forEach(product => {
 
 console.log('All placeholder images created successfully!');
 
+
+

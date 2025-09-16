@@ -1,24 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { DynamicBanner } from '@/components/dynamic-banner'
+import { DynamicBanner, type Banner } from '@/components/dynamic-banner'
 
-interface Banner {
-  id: string
-  title: string
-  subtitle: string
-  image: string
-  link: string
-  linkText: string
-  type: string
-  category: string
-  priority: number
-  isActive: boolean
-  startDate: string | null
-  endDate: string | null
-  createdAt: string
-  updatedAt: string
-}
 
 export function HeroBanner() {
   const [banners, setBanners] = useState<Banner[]>([])

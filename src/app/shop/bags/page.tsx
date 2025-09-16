@@ -92,6 +92,7 @@ function BagsPageContent() {
   if (subcategory) {
     breadcrumbItems.push({
       label: subcategory.charAt(0).toUpperCase() + subcategory.slice(1),
+      href: `/shop/bags/${subcategory}`,
       isActive: true
     })
   }

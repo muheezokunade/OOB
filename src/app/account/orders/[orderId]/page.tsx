@@ -17,7 +17,7 @@ interface OrderDetailPageProps {
 
 export default function OrderDetailPage({ params }: OrderDetailPageProps) {
   const { isAuthenticated, openAuthModal } = useAuthStore()
-  const { orders, getOrderById, getOrderTracking } = useOrderStore()
+  const { getOrder } = useOrderStore()
   const router = useRouter()
   const [orderId, setOrderId] = useState<string>('')
   const [order, setOrder] = useState<any>(null)
@@ -38,10 +38,10 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
 
   useEffect(() => {
     if (orderId) {
-      const foundOrder = getOrderById(orderId)
+      const foundOrder = getOrder(orderId)
       setOrder(foundOrder)
     }
-  }, [orderId, getOrderById])
+  }, [orderId, getOrder])
 
   if (!isAuthenticated) {
     return (
@@ -98,11 +98,7 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
   }
 
   const handleTrackOrder = () => {
-    const tracking = getOrderTracking(order.id)
-    if (tracking) {
-      // In a real app, this would open the tracking page
-      console.log('Tracking order:', tracking)
-    }
+    console.log('Track order', order.id)
   }
 
   const formatAddress = (address: any) => {

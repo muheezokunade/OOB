@@ -92,6 +92,7 @@ function ShoesPageContent() {
   if (subcategory) {
     breadcrumbItems.push({
       label: subcategory.charAt(0).toUpperCase() + subcategory.slice(1),
+      href: `/shop/shoes/${subcategory}`,
       isActive: true
     })
   }

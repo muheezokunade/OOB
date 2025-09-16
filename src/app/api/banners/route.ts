@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { db as prisma } from '@/lib/db'
+import { db } from '@/lib/db'
 import { AuthService } from '@/lib/auth'
 
 // GET /api/banners - Get all banners (public)
@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
       { startDate: { lte: now }, endDate: { gte: now } }
     ]
 
-    const banners = await prisma.banner.findMany({
+    const banners = await db.banner.findMany({
       where,
       orderBy: [
         { priority: 'desc' },
@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const banner = await prisma.banner.create({
+    const banner = await db.banner.create({
       data: {
         title,
         subtitle,

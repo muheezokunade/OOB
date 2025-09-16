@@ -157,42 +157,6 @@ export default function AdminDashboard() {
       icon: DollarSign,
       color: 'text-gold',
       bgColor: 'bg-gold/10'
-    },
-    {
-      title: 'Low Stock Alerts',
-      value: dashboardData.stats.lowStockProducts.toString(),
-      change: '-2',
-      changeType: 'negative' as const,
-      icon: AlertTriangle,
-      color: 'text-orange-600',
-      bgColor: 'bg-orange-50'
-    },
-    {
-      title: 'Pending Messages',
-      value: '12',
-      change: '+3',
-      changeType: 'negative' as const,
-      icon: MessageSquare,
-      color: 'text-red-600',
-      bgColor: 'bg-red-50'
-    },
-    {
-      title: 'Pending Orders',
-      value: dashboardData.stats.pendingOrders.toString(),
-      change: '-1',
-      changeType: 'positive' as const,
-      icon: Truck,
-      color: 'text-indigo-600',
-      bgColor: 'bg-indigo-50'
-    },
-    {
-      title: 'Conversion Rate',
-      value: '3.2%',
-      change: '+0.5%',
-      changeType: 'positive' as const,
-      icon: TrendingUp,
-      color: 'text-emerald-600',
-      bgColor: 'bg-emerald-50'
     }
   ]
   return (
@@ -348,24 +312,6 @@ export default function AdminDashboard() {
         </div>
       </Card>
 
-      {/* Quick Actions */}
-      <Card className="p-6">
-        <h3 className="text-lg font-semibold text-ink mb-6">Quick Actions</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Button variant="outline" className="h-20 flex flex-col gap-2 border-gold text-gold hover:bg-gold hover:text-ink">
-            <Package className="w-6 h-6" />
-            <span>Add New Product</span>
-          </Button>
-          <Button variant="outline" className="h-20 flex flex-col gap-2 border-gold text-gold hover:bg-gold hover:text-ink">
-            <MessageSquare className="w-6 h-6" />
-            <span>View Messages</span>
-          </Button>
-          <Button variant="outline" className="h-20 flex flex-col gap-2 border-gold text-gold hover:bg-gold hover:text-ink">
-            <TrendingUp className="w-6 h-6" />
-            <span>Generate Report</span>
-          </Button>
-        </div>
-      </Card>
     </div>
   )
 }

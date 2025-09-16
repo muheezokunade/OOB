@@ -433,7 +433,7 @@ export default function AdminDiscountsPage() {
                   <div>
                     <label className="text-sm font-medium text-muted-foreground">Applicable To</label>
                     <Badge variant="outline" className="mt-1">
-                      {selectedDiscount.applicableTo.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                      {selectedDiscount.applicableTo.replace('_', ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())}
                     </Badge>
                   </div>
                 </div>

@@ -44,14 +44,30 @@ export default function ProductDetailPage({ params }: PageProps) {
   const router = useRouter()
   const [productId, setProductId] = useState<string>('')
   const [product, setProduct] = useState<Product | null>(null)
+  const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(null)
+  const [selectedSize, setSelectedSize] = useState<string>('')
+  const [quantity, setQuantity] = useState(1)
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0)
+  const [isZoomed, setIsZoomed] = useState(false)
+  const [isAddingToCart, setIsAddingToCart] = useState(false)
+  const [showAddedFeedback, setShowAddedFeedback] = useState(false)
+  const [activeTab, setActiveTab] = useState<'description' | 'specifications' | 'reviews' | 'care'>('description')
+
+  const { addItem, openCart } = useCartStore()
+  const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlistStore()
 
   useEffect(() => {
     params.then((resolvedParams) => {
       setProductId(resolvedParams.productId)
       const foundProduct = getProductByIdWithDefaults(resolvedParams.productId)
       setProduct(foundProduct || null)
+      if (foundProduct) {
+        setSelectedVariant(foundProduct.variants?.[0] || null)
+      }
     })
   }, [params])
+
+  const isWishlisted = product ? isInWishlist(product.id) : false
 
   if (!productId || !product) {
     return (
@@ -63,21 +79,6 @@ export default function ProductDetailPage({ params }: PageProps) {
       </div>
     )
   }
-
-  const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(
-    product.variants?.[0] || null
-  )
-  const [selectedSize, setSelectedSize] = useState<string>('')
-  const [quantity, setQuantity] = useState(1)
-  const [selectedImageIndex, setSelectedImageIndex] = useState(0)
-  const [isZoomed, setIsZoomed] = useState(false)
-  const [isAddingToCart, setIsAddingToCart] = useState(false)
-  const [showAddedFeedback, setShowAddedFeedback] = useState(false)
-  const [activeTab, setActiveTab] = useState<'description' | 'specifications' | 'reviews' | 'care'>('description')
-
-  const { addItem, openCart } = useCartStore()
-  const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlistStore()
-  const isWishlisted = isInWishlist(product.id)
 
   // Get current images based on selected variant
   const currentImages = selectedVariant?.images || product.images
@@ -132,16 +133,7 @@ export default function ProductDetailPage({ params }: PageProps) {
     if (isWishlisted) {
       removeFromWishlist(product.id)
     } else {
-      addToWishlist({
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        originalPrice: product.originalPrice,
-        image: product.images[0],
-        category: product.category,
-        subcategory: product.subcategory,
-        inStock: currentStock > 0,
-      })
+      addToWishlist(product.id)
     }
   }
 

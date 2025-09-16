@@ -3,7 +3,8 @@
 import { MapPin, CreditCard, Truck, Package, FileText } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { CartItem, formatCurrency } from '@/store/cart-store'
+import { formatCurrency } from '@/store/cart-store'
+import type { CartItem } from '@/types/cart'
 import { ShippingMethod, PaymentData } from '@/store/order-store'
 
 interface Address {

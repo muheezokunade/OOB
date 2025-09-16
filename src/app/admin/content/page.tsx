@@ -274,7 +274,7 @@ export default function AdminContentPage() {
                   </div>
                   <div className="flex items-center justify-between">
                     <div className="text-xs text-muted-foreground">
-                      Last modified: {page.lastModified} by {page.author}
+                      Last modified: {new Date((page as any).updatedAt || Date.now()).toLocaleDateString()} by {(page as any).author}
                     </div>
                     <div className="flex items-center gap-2">
                       <Button variant="ghost" size="sm" className="text-gold hover:text-gold/80">

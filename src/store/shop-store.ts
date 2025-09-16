@@ -289,8 +289,8 @@ export const useShopStore = create<ShopState & ShopActions>((set, get) => ({
     const sortOption = sortOptions.find(option => option.value === activeSort)
     if (sortOption && sortOption.field !== 'relevance') {
       filtered.sort((a, b) => {
-        const aValue = a[sortOption.field]
-        const bValue = b[sortOption.field]
+        const aValue = a[sortOption.field as keyof Product] as unknown
+        const bValue = b[sortOption.field as keyof Product] as unknown
         
         if (typeof aValue === 'string' && typeof bValue === 'string') {
           return sortOption.direction === 'asc' 
@@ -336,7 +336,7 @@ export const getUniqueValues = (products: Product[], field: keyof Product): stri
   products.forEach(product => {
     const value = product[field]
     if (Array.isArray(value)) {
-      value.forEach(v => values.add(v))
+      ;(value as unknown as string[]).forEach((v: string) => values.add(v))
     } else if (typeof value === 'string') {
       values.add(value)
     }

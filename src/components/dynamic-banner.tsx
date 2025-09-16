@@ -8,7 +8,7 @@ import { CloudinaryImage } from '@/components/ui/cloudinary-image'
 import { ChevronLeft, ChevronRight, Star, TrendingUp } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
-interface Banner {
+export interface Banner {
   id: string
   title: string
   subtitle?: string

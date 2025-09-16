@@ -85,3 +85,5 @@ Once Cloudinary is configured:
 2. Verify images display correctly on the frontend
 3. Test the complete user flow with real data
 
+
+

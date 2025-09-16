@@ -5,11 +5,12 @@ import { AuthService } from '@/lib/auth'
 // GET /api/banners/[id] - Get single banner (public)
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const banner = await prisma.banner.findUnique({
-      where: { id: params.id }
+      where: { id }
     })
 
     if (!banner) {
@@ -29,7 +30,7 @@ export async function GET(
 // PUT /api/banners/[id] - Update banner (admin only)
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const token = request.headers.get('authorization')?.replace('Bearer ', '')
@@ -42,11 +43,12 @@ export async function PUT(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
+    const { id } = await params
     const body = await request.json()
     const { title, subtitle, image, link, linkText, type, category, priority, isActive, startDate, endDate } = body
 
     const existingBanner = await prisma.banner.findUnique({
-      where: { id: params.id }
+      where: { id }
     })
 
     if (!existingBanner) {
@@ -54,7 +56,7 @@ export async function PUT(
     }
 
     const banner = await prisma.banner.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         title: title || existingBanner.title,
         subtitle,
@@ -83,7 +85,7 @@ export async function PUT(
 // DELETE /api/banners/[id] - Delete banner (admin only)
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const token = request.headers.get('authorization')?.replace('Bearer ', '')
@@ -96,8 +98,9 @@ export async function DELETE(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
+    const { id } = await params
     const existingBanner = await prisma.banner.findUnique({
-      where: { id: params.id }
+      where: { id }
     })
 
     if (!existingBanner) {
@@ -105,7 +108,7 @@ export async function DELETE(
     }
 
     await prisma.banner.delete({
-      where: { id: params.id }
+      where: { id }
     })
 
     return NextResponse.json({ message: 'Banner deleted successfully' })
