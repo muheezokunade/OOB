@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -41,6 +42,7 @@ interface Product {
 }
 
 export default function AdminProductsPage() {
+  const router = useRouter()
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
@@ -273,10 +275,20 @@ export default function AdminProductsPage() {
                     </td>
                     <td className="py-4 px-4">
                       <div className="flex items-center gap-2">
-                        <Button variant="ghost" size="sm" className="text-gold hover:text-gold/80">
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="text-gold hover:text-gold/80"
+                          onClick={() => router.push(`/admin/products/${product.id}/edit`)}
+                        >
                           <Eye className="w-4 h-4" />
                         </Button>
-                        <Button variant="ghost" size="sm" className="text-blue-600 hover:text-blue-700">
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="text-blue-600 hover:text-blue-700"
+                          onClick={() => router.push(`/admin/products/${product.id}/edit`)}
+                        >
                           <Edit className="w-4 h-4" />
                         </Button>
                         <Button 
