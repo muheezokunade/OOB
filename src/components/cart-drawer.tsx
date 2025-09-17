@@ -3,6 +3,7 @@
 import { useEffect } from 'react'
 import { X, Plus, Minus, ShoppingBag, Truck, Gift } from 'lucide-react'
 import { useCartStore, formatCurrency } from '@/store/cart-store'
+import { buildWhatsAppCartMessage, getWhatsAppUrl } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import Link from 'next/link'
@@ -271,6 +272,22 @@ export function CartDrawer() {
                       View Full Cart
                     </Button>
                   </Link>
+                  <Button
+                    variant="outline"
+                    className="w-full border-green-300 text-green-700 hover:bg-green-50"
+                    onClick={() => {
+                      const msg = buildWhatsAppCartMessage(items, { subtotal, tax: Math.round((subtotal - (appliedCoupon ? 0 : 0)) * 0), shipping, total })
+                      const url = getWhatsAppUrl('2349061819572', msg)
+                      window.open(url, '_blank')
+                    }}
+                  >
+                    Share Cart to WhatsApp
+                  </Button>
+                  <Link href="/cart/invoice" onClick={closeCart}>
+                    <Button variant="outline" className="w-full border-gold/30 text-ink hover:bg-stone/100">
+                      View Invoice
+                    </Button>
+                  </Link>
                   <Link href="/checkout" onClick={closeCart}>
                     <Button className="w-full bg-gradient-to-r from-gold to-yellow-400 text-ink hover:from-yellow-400 hover:to-gold shadow-lg">
                       Secure Checkout
@@ -285,6 +302,7 @@ export function CartDrawer() {
     </>
   )
 }
+
 
 
 

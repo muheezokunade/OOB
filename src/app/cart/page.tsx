@@ -6,6 +6,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowLeft, Plus, Minus, X, ShoppingBag, Truck, Gift, CreditCard, Shield, Star, Tag } from 'lucide-react'
 import { useCartStore, formatCurrency } from '@/store/cart-store'
+import { buildWhatsAppCartMessage, getWhatsAppUrl } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -267,7 +268,7 @@ export default function CartPage() {
             ))}
           </div>
 
-          {/* Order Summary */}
+        {/* Order Summary */}
           <div className="space-y-6">
             {/* Coupon Code */}
             <Card className="bg-gradient-to-br from-white to-cream/30 border-gold/20">
@@ -398,7 +399,7 @@ export default function CartPage() {
                   </div>
                 </div>
 
-                {/* Checkout Button */}
+                {/* Actions */}
                 <Link href="/checkout" className="block">
                   <Button 
                     className="w-full bg-gradient-to-r from-gold to-yellow-400 text-ink hover:from-yellow-400 hover:to-gold shadow-lg hover:shadow-gold/25"
@@ -407,6 +408,20 @@ export default function CartPage() {
                     <CreditCard className="w-5 h-5 mr-2" />
                     Proceed to Checkout
                   </Button>
+                </Link>
+                <Button
+                  variant="outline"
+                  className="w-full border-green-300 text-green-700 hover:bg-green-50"
+                  onClick={() => {
+                    const msg = buildWhatsAppCartMessage(items, { subtotal, tax, shipping, total })
+                    const url = getWhatsAppUrl('2349061819572', msg)
+                    window.open(url, '_blank')
+                  }}
+                >
+                  Share Cart to WhatsApp
+                </Button>
+                <Link href="/cart/invoice" className="block">
+                  <Button variant="outline" className="w-full">View Invoice</Button>
                 </Link>
 
                 <p className="text-xs text-ink/60 text-center">
@@ -420,6 +435,7 @@ export default function CartPage() {
     </div>
   )
 }
+
 
 
 

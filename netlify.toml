@@ -2,11 +2,8 @@
   # Build command for Next.js
   command = "npm run build"
   
-  # Directory to publish (Next.js build output)
-  publish = ".next"
-  
-  # Functions directory for serverless functions
-  functions = ".netlify/functions"
+  # Next Runtime handles publishing/functions automatically for Next.js
+  # Remove manual publish and functions to avoid conflicts
 
 [build.environment]
   # Node.js version
@@ -15,11 +12,7 @@
   # Next.js specific environment variables
   NEXT_TELEMETRY_DISABLED = "1"
 
-# Redirect rules for Next.js App Router
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+# Do NOT add a SPA catch-all redirect; Next Runtime must serve API and SSR routes
 
 # Headers for security and performance
 [[headers]]

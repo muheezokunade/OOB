@@ -24,7 +24,7 @@ import {
   Info
 } from 'lucide-react'
 
-import { getProductById, getProductByIdWithDefaults, Product, ProductVariant } from '@/data/products'
+import { getProductByIdWithDefaults, Product, ProductVariant } from '@/data/products'
 import { useCartStore, formatCurrency } from '@/store/cart-store'
 import { useWishlistStore } from '@/store/wishlist-store'
 import { Button } from '@/components/ui/button'
@@ -57,15 +57,78 @@ export default function ProductDetailPage({ params }: PageProps) {
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlistStore()
 
   useEffect(() => {
-    params.then((resolvedParams) => {
-      setProductId(resolvedParams.productId)
-      const foundProduct = getProductByIdWithDefaults(resolvedParams.productId)
+    params.then(async (resolvedParams) => {
+      const id = resolvedParams.productId
+      setProductId(id)
+
+      // Try API first (newly created products live in in-memory store used by API)
+      try {
+        const res = await fetch(`/api/admin/products/${id}`)
+        if (res.ok) {
+          const json = await res.json()
+          const apiProduct = json?.data
+          if (apiProduct) {
+            // Map API/admin product shape to UI Product with defaults
+            const mapped: Product = {
+              id: apiProduct.id,
+              name: apiProduct.name,
+              price: apiProduct.price,
+              originalPrice: apiProduct.originalPrice,
+              images: (apiProduct.images || []).filter((s: string) => !!s && s.trim().length > 0),
+              colors: apiProduct.colors || [],
+              category: apiProduct.category,
+              subcategory: apiProduct.subcategory,
+              description: apiProduct.description || '',
+              longDescription: apiProduct.longDescription,
+              materials: apiProduct.materials || [],
+              isNew: apiProduct.isNew,
+              isBestSeller: apiProduct.isBestSeller,
+              isOutOfStock: apiProduct.isOutOfStock,
+              isPreOrder: apiProduct.isPreOrder,
+              estimatedDelivery: apiProduct.estimatedDelivery,
+              sizes: apiProduct.sizes || [],
+              maxQuantity: apiProduct.maxQuantity,
+              stock: apiProduct.stock ?? 0,
+              variants: apiProduct.variants,
+              reviews: [],
+              rating: 4.5,
+              reviewCount: 0,
+              specifications: apiProduct.specifications || [],
+              careInstructions: apiProduct.careInstructions || [],
+              tags: apiProduct.tags || [],
+              relatedProducts: apiProduct.relatedProducts?.map((rp: any) => rp?.id).filter(Boolean) || [],
+              sku: apiProduct.sku || `OOB-${(apiProduct.id || 'NEW').slice(0,3).toUpperCase()}-001`,
+              weight: apiProduct.weight,
+              dimensions: typeof apiProduct.dimensions === 'object' ? apiProduct.dimensions : undefined
+            }
+            setProduct(mapped)
+            setSelectedVariant(mapped.variants?.[0] || null)
+            return
+          }
+        }
+      } catch (e) {
+        // ignore and fallback
+      }
+
+      // Fallback to static dataset
+      const foundProduct = getProductByIdWithDefaults(id)
       setProduct(foundProduct || null)
       if (foundProduct) {
         setSelectedVariant(foundProduct.variants?.[0] || null)
       }
     })
   }, [params])
+
+  // Keep hooks order stable: run size reset effect before any conditional returns
+  useEffect(() => {
+    const hasVariantSizes = !!(selectedVariant && selectedVariant.sizes && selectedVariant.sizes.length > 0)
+    const hasProductSizes = !!(product && product.sizes && product.sizes.length > 0)
+    if (hasVariantSizes) {
+      setSelectedSize(selectedVariant!.sizes[0].size)
+    } else if (hasProductSizes) {
+      setSelectedSize(product!.sizes![0])
+    }
+  }, [selectedVariant, product])
 
   const isWishlisted = product ? isInWishlist(product.id) : false
 
@@ -81,18 +144,10 @@ export default function ProductDetailPage({ params }: PageProps) {
   }
 
   // Get current images based on selected variant
-  const currentImages = selectedVariant?.images || product.images
+  const currentImages = (selectedVariant?.images || product.images || []).filter((s) => !!s && s.trim().length > 0)
   const currentStock = selectedVariant?.sizes.find(s => s.size === selectedSize)?.stock || product.stock || 0
   const maxQuantityForSize = Math.min(currentStock, product.maxQuantity || 99)
 
-  useEffect(() => {
-    // Reset selected size when variant changes
-    if (selectedVariant && selectedVariant.sizes.length > 0) {
-      setSelectedSize(selectedVariant.sizes[0].size)
-    } else if (product.sizes && product.sizes.length > 0) {
-      setSelectedSize(product.sizes[0])
-    }
-  }, [selectedVariant, product.sizes])
 
   const handleAddToCart = async () => {
     if (!selectedSize && product.sizes && product.sizes.length > 0) {
@@ -225,17 +280,23 @@ export default function ProductDetailPage({ params }: PageProps) {
             {/* Main Image */}
             <Card className="overflow-hidden bg-gradient-to-br from-white to-cream/30 border-gold/20">
               <div className="relative aspect-square group">
-                <Image
-                  src={currentImages[selectedImageIndex]}
-                  alt={product.name}
-                  fill
-                  className={cn(
-                    "object-cover transition-transform duration-300",
-                    isZoomed && "scale-150 cursor-zoom-out"
-                  )}
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  onClick={() => setIsZoomed(!isZoomed)}
-                />
+                {currentImages.length > 0 ? (
+                  <Image
+                    src={currentImages[selectedImageIndex]}
+                    alt={product.name}
+                    fill
+                    className={cn(
+                      "object-cover transition-transform duration-300",
+                      isZoomed && "scale-150 cursor-zoom-out"
+                    )}
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    onClick={() => setIsZoomed(!isZoomed)}
+                  />
+                ) : (
+                  <div className="absolute inset-0 flex items-center justify-center bg-muted text-muted-foreground">
+                    No image
+                  </div>
+                )}
                 
                 {/* Navigation Arrows */}
                 {currentImages.length > 1 && (

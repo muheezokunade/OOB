@@ -48,7 +48,21 @@ export function CloudinaryImage({
   const [hasError, setHasError] = useState(false)
 
   // Bypass Cloudinary processing - use direct URLs
-  const imageSrc = src
+  const imageSrc = (src || '').trim()
+
+  if (!imageSrc) {
+    return (
+      <div 
+        className={cn(
+          "flex items-center justify-center bg-gray-100 text-gray-400",
+          className
+        )}
+        style={fill ? { width: '100%', height: '100%' } : { width, height }}
+      >
+        <span className="text-sm">No image</span>
+      </div>
+    )
+  }
 
   const handleLoad = () => {
     setIsLoading(false)

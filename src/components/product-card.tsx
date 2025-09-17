@@ -38,6 +38,10 @@ export function ProductCard({ product, variant = 'default', className }: Product
   const [isAdding, setIsAdding] = useState(false)
   const [showAddedFeedback, setShowAddedFeedback] = useState(false)
   
+  // Ensure we never pass an empty string to the Image component
+  const currentImageSrc = (product.images?.[currentImageIndex] || '').trim()
+  const hasCurrentImage = currentImageSrc.length > 0
+  
   const { addItem, openCart } = useCartStore()
 
   const handleWhatsAppClick = () => {
@@ -60,7 +64,7 @@ export function ProductCard({ product, variant = 'default', className }: Product
       name: product.name,
       price: product.price,
       originalPrice: product.originalPrice,
-      image: product.images[0],
+      image: (product.images?.[0] || '').trim() || '/window.svg',
       category: product.category,
       subcategory: product.subcategory,
       inStock: !product.isOutOfStock,
@@ -97,16 +101,22 @@ export function ProductCard({ product, variant = 'default', className }: Product
     >
       <Link href={`/shop/${product.id}`}>
         <div className="relative aspect-[4/5] overflow-hidden">
-          <Image
-            src={product.images[currentImageIndex]}
-            alt={product.name}
-            fill
-            className={cn(
-              "object-cover transition-all duration-300",
-              isHovered && product.images.length > 1 && "scale-105"
-            )}
-            sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
-          />
+          {hasCurrentImage ? (
+            <Image
+              src={currentImageSrc}
+              alt={product.name}
+              fill
+              className={cn(
+                "object-cover transition-all duration-300",
+                isHovered && product.images.length > 1 && "scale-105"
+              )}
+              sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+            />
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center bg-muted text-muted-foreground">
+              No image
+            </div>
+          )}
           
           {/* Badges */}
           <div className="absolute top-3 left-3 flex flex-col gap-2">

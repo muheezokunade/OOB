@@ -45,3 +45,4 @@ async function updateHomepageViaAPI() {
 
 // Wait a bit for the server to start, then try the API call
 setTimeout(updateHomepageViaAPI, 3000)
+

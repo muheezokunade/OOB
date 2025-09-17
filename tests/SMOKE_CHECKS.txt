@@ -1,0 +1,7 @@
+E2E Smoke Checklist (manual)
+- Home → click category → reaches /shop route
+- /shop → click product → PDP loads, images render, add to cart works
+- Cart drawer opens, totals update; Share to WhatsApp opens wa.me
+- /cart → invoice link opens /cart/invoice; Print works
+- Admin login → dashboard loads with token; categories CRUD works
+- API health: /api/health returns { ok: true }

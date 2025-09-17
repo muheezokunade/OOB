@@ -13,6 +13,7 @@ import {
   Search,
   Loader2
 } from 'lucide-react'
+import { showApiErrorToast } from '@/lib/toast'
 
 interface Category {
   id: string
@@ -46,70 +47,14 @@ export default function CategoriesPage() {
   const fetchCategories = async () => {
     try {
       setLoading(true)
-      // Mock data for now - replace with actual API call
-      const mockCategories: Category[] = [
-        {
-          id: '1',
-          name: 'Bags',
-          slug: 'bags',
-          description: 'Luxury handbags and purses',
-          isActive: true,
-          productCount: 24,
-          createdAt: '2024-01-01'
-        },
-        {
-          id: '2',
-          name: 'Shoes',
-          slug: 'shoes',
-          description: 'Elegant footwear for every occasion',
-          isActive: true,
-          productCount: 18,
-          createdAt: '2024-01-01'
-        },
-        {
-          id: '3',
-          name: 'Totes',
-          slug: 'totes',
-          description: 'Large capacity bags for daily use',
-          parentId: '1',
-          isActive: true,
-          productCount: 8,
-          createdAt: '2024-01-01'
-        },
-        {
-          id: '4',
-          name: 'Clutches',
-          slug: 'clutches',
-          description: 'Evening bags and small purses',
-          parentId: '1',
-          isActive: true,
-          productCount: 12,
-          createdAt: '2024-01-01'
-        },
-        {
-          id: '5',
-          name: 'Heels',
-          slug: 'heels',
-          description: 'High-heeled shoes for special occasions',
-          parentId: '2',
-          isActive: true,
-          productCount: 10,
-          createdAt: '2024-01-01'
-        },
-        {
-          id: '6',
-          name: 'Flats',
-          slug: 'flats',
-          description: 'Comfortable flat shoes for everyday wear',
-          parentId: '2',
-          isActive: true,
-          productCount: 8,
-          createdAt: '2024-01-01'
-        }
-      ]
-      setCategories(mockCategories)
+      const res = await fetch('/api/admin/categories')
+      if (!res.ok) throw new Error('Failed to load categories')
+      const json = await res.json()
+      const items: Category[] = json?.data?.categories || []
+      setCategories(items)
     } catch (error) {
-      console.error('Failed to fetch categories:', error)
+      showApiErrorToast('Failed to fetch categories')
+      setCategories([])
     } finally {
       setLoading(false)
     }
@@ -144,7 +89,7 @@ export default function CategoriesPage() {
         }
       }
     } catch (error) {
-      console.error('Failed to save category:', error)
+      showApiErrorToast('Failed to save category')
     }
   }
 
@@ -158,7 +103,7 @@ export default function CategoriesPage() {
           fetchCategories()
         }
       } catch (error) {
-        console.error('Failed to delete category:', error)
+        showApiErrorToast('Failed to delete category')
       }
     }
   }
@@ -410,6 +355,7 @@ export default function CategoriesPage() {
     </div>
   )
 }
+
 
 
 
