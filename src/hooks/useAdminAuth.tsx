@@ -29,7 +29,6 @@ export function AdminAuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true)
   const router = useRouter()
 
-  // Check if user is authenticated on mount
   useEffect(() => {
     checkAuth()
   }, [])
@@ -157,7 +156,6 @@ export function useAdminAuth() {
   return context
 }
 
-// Higher-order component for protecting admin routes
 export function withAdminAuth<P extends object>(
   Component: React.ComponentType<P>,
   requiredPermissions?: string[]

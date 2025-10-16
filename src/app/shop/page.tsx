@@ -204,7 +204,7 @@ export default function ShopPage() {
         </div>
 
         <div className="flex gap-8">
-          {/* Filter Sidebar */}
+          {/* Filter Sidebar - Desktop */}
           <div className="hidden lg:block w-80 flex-shrink-0">
             <FilterSidebar 
               allProducts={products}
@@ -213,12 +213,14 @@ export default function ShopPage() {
             />
           </div>
 
-          {/* Mobile Filter Sidebar */}
-          <FilterSidebar 
-            allProducts={products}
-            isOpen={isFiltersOpen}
-            onClose={toggleFilters}
-          />
+          {/* Filter Sidebar - Mobile */}
+          <div className="lg:hidden">
+            <FilterSidebar 
+              allProducts={products}
+              isOpen={isFiltersOpen}
+              onClose={toggleFilters}
+            />
+          </div>
 
           {/* Products Grid */}
           <div className="flex-1">

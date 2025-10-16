@@ -197,19 +197,6 @@ export function AdminSidebar() {
           )
         })}
       </nav>
-
-      {/* Admin Info */}
-      <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gold/20 bg-gradient-to-r from-stone/30 to-fog/30 backdrop-blur-sm">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-gradient-to-br from-gold to-yellow-400 rounded-full flex items-center justify-center shadow-md">
-            <Shield className="w-4 h-4 text-ink" />
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-ink truncate">Admin User</p>
-            <p className="text-xs text-ink/60">Super Admin</p>
-          </div>
-        </div>
-      </div>
     </div>
   )
 }

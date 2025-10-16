@@ -298,9 +298,22 @@ export function requireAuth(requiredPermissions?: string[]) {
 
 // Helper function to extract token from request
 export function getTokenFromRequest(req: Request): string | null {
+  // Prefer Authorization header
   const authHeader = req.headers.get('authorization')
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return null
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    return authHeader.substring(7)
   }
-  return authHeader.substring(7)
+
+  // Fallback: read from cookies
+  const cookieHeader = req.headers.get('cookie') || ''
+  // naive parse to avoid dependency
+  const cookies = Object.fromEntries(
+    cookieHeader.split(';').map(part => {
+      const [k, ...rest] = part.trim().split('=')
+      return [k, decodeURIComponent(rest.join('='))]
+    })
+  ) as Record<string, string>
+
+  const cookieToken = cookies['admin_token']
+  return cookieToken || null
 }

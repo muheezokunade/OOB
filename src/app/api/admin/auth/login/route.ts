@@ -70,8 +70,8 @@ export async function POST(request: NextRequest) {
     // Update last login
     await AuthService.updateLastLogin(admin.id)
 
-    // Return success response
-    return NextResponse.json({
+    // Return success response and set httpOnly cookie for SSR convenience
+    const res = NextResponse.json({
       success: true,
       data: {
         token,
@@ -86,6 +86,16 @@ export async function POST(request: NextRequest) {
       },
       message: 'Login successful'
     })
+
+    // Cookie for 7 days
+    res.cookies.set('admin_token', token, {
+      httpOnly: true,
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 60 * 60 * 24 * 7
+    })
+
+    return res
   } catch (error) {
     console.error('Admin login error:', error)
     return NextResponse.json(

@@ -44,14 +44,39 @@ export default function ProductDetailPage({ params }: PageProps) {
   const router = useRouter()
   const [productId, setProductId] = useState<string>('')
   const [product, setProduct] = useState<Product | null>(null)
+  const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(null)
+  const [selectedSize, setSelectedSize] = useState<string>('')
+  const [quantity, setQuantity] = useState(1)
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0)
+  const [isZoomed, setIsZoomed] = useState(false)
+  const [isAddingToCart, setIsAddingToCart] = useState(false)
+  const [showAddedFeedback, setShowAddedFeedback] = useState(false)
+  const [activeTab, setActiveTab] = useState<'description' | 'specifications' | 'reviews' | 'care'>('description')
+
+  const { addItem, openCart } = useCartStore()
+  const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlistStore()
 
   useEffect(() => {
     params.then((resolvedParams) => {
       setProductId(resolvedParams.productId)
       const foundProduct = getProductByIdWithDefaults(resolvedParams.productId)
       setProduct(foundProduct || null)
+      if (foundProduct) {
+        setSelectedVariant(foundProduct.variants?.[0] || null)
+      }
     })
   }, [params])
+
+  useEffect(() => {
+    // Reset selected size when variant changes
+    if (selectedVariant && selectedVariant.sizes.length > 0) {
+      setSelectedSize(selectedVariant.sizes[0].size)
+    } else if (product?.sizes && product.sizes.length > 0) {
+      setSelectedSize(product.sizes[0])
+    }
+  }, [selectedVariant, product?.sizes])
+
+  const isWishlisted = product ? isInWishlist(product.id) : false
 
   if (!productId || !product) {
     return (
@@ -64,34 +89,10 @@ export default function ProductDetailPage({ params }: PageProps) {
     )
   }
 
-  const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(
-    product.variants?.[0] || null
-  )
-  const [selectedSize, setSelectedSize] = useState<string>('')
-  const [quantity, setQuantity] = useState(1)
-  const [selectedImageIndex, setSelectedImageIndex] = useState(0)
-  const [isZoomed, setIsZoomed] = useState(false)
-  const [isAddingToCart, setIsAddingToCart] = useState(false)
-  const [showAddedFeedback, setShowAddedFeedback] = useState(false)
-  const [activeTab, setActiveTab] = useState<'description' | 'specifications' | 'reviews' | 'care'>('description')
-
-  const { addItem, openCart } = useCartStore()
-  const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlistStore()
-  const isWishlisted = isInWishlist(product.id)
-
   // Get current images based on selected variant
   const currentImages = selectedVariant?.images || product.images
   const currentStock = selectedVariant?.sizes.find(s => s.size === selectedSize)?.stock || product.stock || 0
   const maxQuantityForSize = Math.min(currentStock, product.maxQuantity || 99)
-
-  useEffect(() => {
-    // Reset selected size when variant changes
-    if (selectedVariant && selectedVariant.sizes.length > 0) {
-      setSelectedSize(selectedVariant.sizes[0].size)
-    } else if (product.sizes && product.sizes.length > 0) {
-      setSelectedSize(product.sizes[0])
-    }
-  }, [selectedVariant, product.sizes])
 
   const handleAddToCart = async () => {
     if (!selectedSize && product.sizes && product.sizes.length > 0) {

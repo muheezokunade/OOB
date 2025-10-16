@@ -15,16 +15,30 @@ const nextConfig: NextConfig = {
         emitOnErrors: false,
       };
     }
+
+    // Handle Cloudinary client-side imports
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        path: false,
+        stream: false,
+        crypto: false,
+        os: false,
+        util: false,
+      };
+    }
+
     return config;
   },
-  
+
   // Disable React DevTools console message
   reactStrictMode: true,
   
   // Optimize images
   images: {
     formats: ['image/webp', 'image/avif'],
-    domains: ['res.cloudinary.com'],
+    domains: ['res.cloudinary.com', 'images.unsplash.com'],
     remotePatterns: [
       {
         protocol: 'https',
@@ -32,13 +46,17 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+        port: '',
+        pathname: '/**',
+      },
     ],
   },
   
   // Performance optimizations
-  experimental: {
-    // Remove optimizeCss as it's causing issues
-  },
+  experimental: {},
   
   // Development optimizations
   ...(process.env.NODE_ENV === 'development' && {
