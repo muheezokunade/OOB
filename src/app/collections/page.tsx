@@ -65,7 +65,7 @@ const collections = [
     id: 'professional-edit',
     title: 'Professional Edit',
     description: 'Sophisticated designs that transition seamlessly from boardroom to events.',
-    image: 'https://i.postimg.cc/ThMqVG2V/PHOTO-2025-10-16-20-50-20.jpg',
+    image: 'https://i.postimg.cc/7LgGp7Vv/PHOTO-2025-10-16-20-50-18.jpg',
     href: '/shop/shoes/office',
     badge: 'Trending',
     category: 'shoes',
