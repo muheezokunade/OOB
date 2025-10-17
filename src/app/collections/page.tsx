@@ -55,7 +55,7 @@ const collections = [
     id: 'owambe-collection',
     title: 'Owambe Collection',
     description: 'Bold, beautiful designs perfect for Nigerian celebrations and special occasions.',
-    image: 'https://i.postimg.cc/pybYfxV9/PHOTO-2025-10-16-20-50-19.jpg',
+    image: 'https://i.postimg.cc/K8khvhRh/PHOTO-2025-10-16-20-50-19-2.jpg',
     href: '/shop/shoes/owambe',
     badge: 'Exclusive',
     category: 'shoes',
