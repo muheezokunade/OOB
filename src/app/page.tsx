@@ -85,7 +85,7 @@ export default function Home() {
       </section>
 
       {/* Dynamic Categories Grid */}
-      <section className="py-20 bg-fog">
+      <section className="py-20 bg-gradient-to-br from-cream via-fog to-stone">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <Badge variant="outline" className="mb-4">
@@ -99,37 +99,43 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
             {/* Bags Category */}
             <Link href="/shop/bags" className="group">
-              <Card className="overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-all duration-500 group-hover:-translate-y-2">
-                <div className="relative aspect-[16/10]">
-                  <Image
-                    src="/images/features/bags-feature.svg"
-                    alt="Luxury Bags Collection"
-                    fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-coal/80 via-transparent to-transparent" />
+              <Card className="overflow-hidden border-0 shadow-soft hover:shadow-elevated transition-all duration-500 group-hover:-translate-y-1 rounded-2xl h-full">
+                <div className="relative aspect-[4/3] bg-gradient-to-br from-amber-900 via-amber-800 to-amber-700">
+                  {/* Decorative Pattern */}
+                  <div className="absolute inset-0 opacity-10">
+                    <div className="absolute inset-0" style={{
+                      backgroundImage: `radial-gradient(circle at 20% 30%, white 1px, transparent 1px)`,
+                      backgroundSize: '40px 40px'
+                    }}></div>
+                  </div>
                   
-                  <div className="absolute bottom-0 left-0 right-0 p-8 text-background">
-                    <div className="flex items-center gap-2 mb-3">
-                      <Badge variant="accent" className="text-xs">
+                  <div className="absolute inset-0 flex flex-col justify-between p-8 text-cream">
+                    {/* Top Section - Badges */}
+                    <div className="flex items-center gap-2">
+                      <Badge className="text-xs bg-gold text-ink border-0 shadow-lg">
                         Premium Collection
                       </Badge>
-                      <Badge variant="secondary" className="text-xs bg-background/20 text-background border-background/20">
+                      <Badge className="text-xs bg-cream/20 text-cream border-cream/30 backdrop-blur-sm">
                         15+ Styles
                       </Badge>
                     </div>
                     
-                    <h3 className="h1 mb-3">Luxury Bags</h3>
-                    <p className="text-background/80 mb-4">
-                      From boardroom briefcases to weekend totes, discover bags that command attention.
-                    </p>
-                    
-                    <div className="flex items-center gap-2 text-gold group-hover:gap-4 transition-all">
-                      <span className="font-medium">Explore Bags</span>
-                      <ArrowRight className="w-5 h-5" />
+                    {/* Bottom Section - Content */}
+                    <div>
+                      <h3 className="text-4xl md:text-5xl font-serif font-semibold mb-4 leading-tight">
+                        Luxury Bags
+                      </h3>
+                      <p className="text-cream/90 mb-6 text-lg leading-relaxed max-w-md">
+                        From boardroom briefcases to weekend totes, discover bags that command attention.
+                      </p>
+                      
+                      <div className="flex items-center gap-2 text-gold font-medium group-hover:gap-4 transition-all">
+                        <span>Explore Bags</span>
+                        <ArrowRight className="w-5 h-5" />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -138,34 +144,40 @@ export default function Home() {
 
             {/* Shoes Category */}
             <Link href="/shop/shoes" className="group">
-              <Card className="overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-all duration-500 group-hover:-translate-y-2">
-                <div className="relative aspect-[16/10]">
-            <Image
-                    src="/images/features/shoes-feature.svg"
-                    alt="Designer Shoes Collection"
-                    fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-coal/80 via-transparent to-transparent" />
+              <Card className="overflow-hidden border-0 shadow-soft hover:shadow-elevated transition-all duration-500 group-hover:-translate-y-1 rounded-2xl h-full">
+                <div className="relative aspect-[4/3] bg-gradient-to-br from-yellow-600 via-yellow-500 to-yellow-400">
+                  {/* Decorative Pattern */}
+                  <div className="absolute inset-0 opacity-10">
+                    <div className="absolute inset-0" style={{
+                      backgroundImage: `radial-gradient(circle at 80% 70%, white 1px, transparent 1px)`,
+                      backgroundSize: '40px 40px'
+                    }}></div>
+                  </div>
                   
-                  <div className="absolute bottom-0 left-0 right-0 p-8 text-background">
-                    <div className="flex items-center gap-2 mb-3">
-                      <Badge variant="accent" className="text-xs">
+                  <div className="absolute inset-0 flex flex-col justify-between p-8 text-ink">
+                    {/* Top Section - Badges */}
+                    <div className="flex items-center gap-2">
+                      <Badge className="text-xs bg-gold text-ink border-0 shadow-lg">
                         Trending Now
                       </Badge>
-                      <Badge variant="secondary" className="text-xs bg-background/20 text-background border-background/20">
+                      <Badge className="text-xs bg-ink/10 text-ink border-ink/20 backdrop-blur-sm">
                         12+ Styles
                       </Badge>
                     </div>
                     
-                    <h3 className="h1 mb-3">Designer Shoes</h3>
-                    <p className="text-background/80 mb-4">
-                      From owambe heels to office pumps, step into confidence with every stride.
-                    </p>
-                    
-                    <div className="flex items-center gap-2 text-gold group-hover:gap-4 transition-all">
-                      <span className="font-medium">Explore Shoes</span>
-                      <ArrowRight className="w-5 h-5" />
+                    {/* Bottom Section - Content */}
+                    <div>
+                      <h3 className="text-4xl md:text-5xl font-serif font-semibold mb-4 leading-tight">
+                        Designer Shoes
+                      </h3>
+                      <p className="text-ink/80 mb-6 text-lg leading-relaxed max-w-md">
+                        From owambe heels to office pumps, step into confidence with every stride.
+                      </p>
+                      
+                      <div className="flex items-center gap-2 text-gold font-medium group-hover:gap-4 transition-all">
+                        <span>Explore Shoes</span>
+                        <ArrowRight className="w-5 h-5" />
+                      </div>
                     </div>
                   </div>
                 </div>
