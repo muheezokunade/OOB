@@ -268,49 +268,47 @@ export default function CollectionsPage() {
               </Button>
             </div>
           ) : (
-            <div className={viewMode === 'grid' 
-              ? "grid grid-cols-1 lg:grid-cols-2 gap-8" 
-              : "space-y-6"
-            }>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
               {filteredCollections.map((collection, index) => (
                 <Link 
                   key={collection.id} 
                   href={collection.href} 
-                  className="group animate-in fade-in slide-in-from-bottom-4"
-                  style={{ animationDelay: `${index * 100}ms` }}
+                  className="group block"
                 >
-                  <Card className="overflow-hidden border-0 shadow-soft hover:shadow-elevated transition-all duration-500 group-hover:-translate-y-2 h-full">
-                    <div className="relative aspect-[16/10]">
+                  <Card className="overflow-hidden border-0 shadow-soft hover:shadow-elevated transition-all duration-500 h-full">
+                    {/* Image Section */}
+                    <div className="relative aspect-[4/3] overflow-hidden">
                       <Image
                         src={collection.image}
                         alt={collection.title}
                         fill
-                        className="object-cover transition-transform duration-700 group-hover:scale-105"
-                        sizes={viewMode === 'grid' ? "(max-width: 1024px) 100vw, 50vw" : "100vw"}
+                        className="object-cover transition-transform duration-700 group-hover:scale-110"
+                        sizes="(max-width: 1024px) 100vw, 50vw"
                         priority={index < 2}
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-ink/60 via-transparent to-transparent" />
                       
-                      {/* Badge */}
-                      <div className="absolute top-6 left-6">
+                      {/* Badge Overlay */}
+                      <div className="absolute top-6 left-6 z-10">
                         <Badge variant="accent" className="text-xs shadow-lg">
                           {collection.badge}
                         </Badge>
                       </div>
-
-                      {/* Content Overlay */}
-                      <div className="absolute bottom-6 left-6 right-6 text-white">
-                        <h3 className="h2 mb-2">{collection.title}</h3>
-                        <p className="text-sm opacity-90 mb-4 line-clamp-2">
-                          {collection.description}
-                        </p>
-                        
-                        <div className="flex items-center gap-2 text-sm font-medium opacity-80 group-hover:opacity-100 transition-opacity">
-                          <span>Explore Collection</span>
-                          <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                        </div>
-                      </div>
                     </div>
+
+                    {/* Content Section */}
+                    <CardContent className="p-8 bg-gradient-to-br from-background to-fog/30">
+                      <h3 className="text-2xl font-serif font-semibold text-ink mb-3 group-hover:text-gold transition-colors">
+                        {collection.title}
+                      </h3>
+                      <p className="text-muted-foreground mb-6 leading-relaxed">
+                        {collection.description}
+                      </p>
+                      
+                      <div className="flex items-center gap-2 text-gold font-medium group-hover:gap-4 transition-all">
+                        <span>Explore Collection</span>
+                        <ArrowRight className="w-5 h-5" />
+                      </div>
+                    </CardContent>
                   </Card>
                 </Link>
               ))}
