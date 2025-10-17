@@ -38,10 +38,11 @@ export default function AboutPage() {
             </div>
             <div className="relative h-96 rounded-lg overflow-hidden">
               <Image
-                src="/images/features/bags-feature.svg"
-                alt="Our journey"
+                src="https://i.postimg.cc/7LgGp7Vv/PHOTO-2025-10-16-20-50-18.jpg"
+                alt="Luxury Bags Collection"
                 fill
                 className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 50vw"
               />
             </div>
           </div>
