@@ -38,7 +38,7 @@ const nextConfig: NextConfig = {
   // Optimize images
   images: {
     formats: ['image/webp', 'image/avif'],
-    domains: ['res.cloudinary.com', 'images.unsplash.com'],
+    domains: ['res.cloudinary.com', 'images.unsplash.com', 'i.postimg.cc'],
     remotePatterns: [
       {
         protocol: 'https',
@@ -49,6 +49,12 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'images.unsplash.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'i.postimg.cc',
         port: '',
         pathname: '/**',
       },
