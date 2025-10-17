@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
 import { getProductsByCategory, getProductsBySubcategory, getBestSellers } from '@/data/products'
@@ -30,11 +29,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-
-export const metadata: Metadata = {
-  title: 'Collections | OmoOniBag - Curated Collections',
-  description: 'Discover our carefully curated collections of luxury bags and shoes. From everyday essentials to statement pieces.',
-}
 
 const collections = [
   {
