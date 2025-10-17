@@ -43,6 +43,12 @@ const menuItems = [
     ]
   },
   {
+    title: 'Collections',
+    href: '/admin/collections',
+    icon: BookOpen,
+    badge: null
+  },
+  {
     title: 'Orders',
     href: '/admin/orders',
     icon: ShoppingCart,

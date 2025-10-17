@@ -438,3 +438,24 @@ model Banner {
 
   @@map("banners")
 }
+
+model Collection {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  description String   @db.Text
+  image       String
+  badge       String?  // New, Popular, Exclusive, Trending
+  href        String
+  category    String?  // bags, shoes, new-arrivals, etc.
+  priority    Int      @default(0) // Higher number = higher priority
+  isActive    Boolean  @default(true)
+  isFeatured  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([slug])
+  @@index([isActive])
+  @@index([isFeatured])
+  @@map("collections")
+}

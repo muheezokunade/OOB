@@ -1,3 +1,6 @@
+'use client'
+
+import { useState, useMemo } from 'react'
 import { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -5,8 +8,28 @@ import { getProductsByCategory, getProductsBySubcategory, getBestSellers } from 
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
 import { ProductCard } from '@/components/product-card'
-import { ArrowRight, Star, Sparkles, Award, TrendingUp } from 'lucide-react'
+import { 
+  ArrowRight, 
+  Star, 
+  Sparkles, 
+  Award, 
+  TrendingUp, 
+  Search, 
+  Filter,
+  Grid3X3,
+  List,
+  SortAsc,
+  X
+} from 'lucide-react'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 export const metadata: Metadata = {
   title: 'Collections | OmoOniBag - Curated Collections',
@@ -21,6 +44,7 @@ const collections = [
     image: '/images/collections/new-arrivals.svg',
     href: '/shop?collection=new',
     badge: 'New',
+    category: 'all',
     products: getProductsByCategory('Bags').filter(p => p.isNew).slice(0, 3)
   },
   {
@@ -30,6 +54,7 @@ const collections = [
     image: '/images/collections/best-sellers.svg',
     href: '/shop?collection=bestsellers',
     badge: 'Popular',
+    category: 'all',
     products: getBestSellers().slice(0, 3)
   },
   {
@@ -39,6 +64,7 @@ const collections = [
     image: '/images/collections/owambe.svg',
     href: '/shop/shoes/owambe',
     badge: 'Exclusive',
+    category: 'shoes',
     products: getProductsBySubcategory('Owambe').slice(0, 3)
   },
   {
@@ -48,18 +74,84 @@ const collections = [
     image: '/images/collections/professional.svg',
     href: '/shop/shoes/office',
     badge: 'Trending',
+    category: 'shoes',
     products: getProductsBySubcategory('Office').slice(0, 3)
   }
 ]
 
+const categories = [
+  { value: 'all', label: 'All Collections' },
+  { value: 'bags', label: 'Bags' },
+  { value: 'shoes', label: 'Shoes' },
+  { value: 'new', label: 'New Arrivals' },
+  { value: 'popular', label: 'Popular' }
+]
+
+const sortOptions = [
+  { value: 'featured', label: 'Featured First' },
+  { value: 'newest', label: 'Newest First' },
+  { value: 'alphabetical', label: 'A-Z' },
+  { value: 'popular', label: 'Most Popular' }
+]
+
 export default function CollectionsPage() {
+  const [searchQuery, setSearchQuery] = useState('')
+  const [selectedCategory, setSelectedCategory] = useState('all')
+  const [sortBy, setSortBy] = useState('featured')
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
+
+  // Filter and sort collections
+  const filteredCollections = useMemo(() => {
+    let filtered = collections
+
+    // Filter by search query
+    if (searchQuery) {
+      filtered = filtered.filter(collection =>
+        collection.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        collection.description.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    }
+
+    // Filter by category
+    if (selectedCategory !== 'all') {
+      filtered = filtered.filter(collection => 
+        collection.category === selectedCategory
+      )
+    }
+
+    // Sort collections
+    const sorted = [...filtered].sort((a, b) => {
+      switch (sortBy) {
+        case 'newest':
+          return collections.indexOf(b) - collections.indexOf(a)
+        case 'alphabetical':
+          return a.title.localeCompare(b.title)
+        case 'popular':
+          return b.products.length - a.products.length
+        case 'featured':
+        default:
+          return 0
+      }
+    })
+
+    return sorted
+  }, [searchQuery, selectedCategory, sortBy])
+
   const newProducts = getProductsByCategory('Bags').filter(p => p.isNew)
   const bestSellers = getBestSellers()
+
+  const clearFilters = () => {
+    setSearchQuery('')
+    setSelectedCategory('all')
+    setSortBy('featured')
+  }
+
+  const hasActiveFilters = searchQuery !== '' || selectedCategory !== 'all' || sortBy !== 'featured'
 
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <section className="py-16 bg-fog">
+      <section className="py-16 bg-gradient-to-br from-cream via-fog to-stone">
         <div className="container mx-auto px-4">
           <div className="text-center max-w-3xl mx-auto">
             <Badge variant="outline" className="mb-4">
@@ -75,52 +167,166 @@ export default function CollectionsPage() {
         </div>
       </section>
 
-      {/* Collections Grid */}
-      <section className="py-20">
+      {/* Search and Filters */}
+      <section className="py-8 bg-background border-b border-border">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-20">
-            {collections.map((collection, index) => (
-              <Link key={collection.id} href={collection.href} className="group">
-                <Card className="overflow-hidden border-0 shadow-soft hover:shadow-elevated transition-all duration-500 group-hover:-translate-y-2">
-                  <div className="relative aspect-[16/10]">
-                    <Image
-                      src={collection.image}
-                      alt={collection.title}
-                      fill
-                      className="object-cover transition-transform duration-700 group-hover:scale-105"
-                      sizes="(max-width: 1024px) 100vw, 50vw"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-ink/60 via-transparent to-transparent" />
-                    
-                    {/* Badge */}
-                    <div className="absolute top-6 left-6">
-                      <Badge variant="accent" className="text-xs shadow-lg">
-                        {collection.badge}
-                      </Badge>
-                    </div>
+          <div className="flex flex-col lg:flex-row gap-4">
+            {/* Search Bar */}
+            <div className="relative flex-1 max-w-md">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Input
+                placeholder="Search collections..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 border-gold/20 focus:border-gold"
+              />
+            </div>
 
-                    {/* Content Overlay */}
-                    <div className="absolute bottom-6 left-6 right-6 text-white">
-                      <h3 className="h2 mb-2">{collection.title}</h3>
-                      <p className="text-sm opacity-90 mb-4 line-clamp-2">
-                        {collection.description}
-                      </p>
-                      
-                      <div className="flex items-center gap-2 text-sm font-medium opacity-80 group-hover:opacity-100 transition-opacity">
-                        <span>Explore Collection</span>
-                        <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                      </div>
-                    </div>
-                  </div>
-                </Card>
-              </Link>
-            ))}
+            {/* Category Filter */}
+            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+              <SelectTrigger className="w-full lg:w-48 border-gold/20 focus:border-gold">
+                <Filter className="w-4 h-4 mr-2" />
+                <SelectValue placeholder="Category" />
+              </SelectTrigger>
+              <SelectContent>
+                {categories.map((category) => (
+                  <SelectItem key={category.value} value={category.value}>
+                    {category.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            {/* Sort */}
+            <Select value={sortBy} onValueChange={setSortBy}>
+              <SelectTrigger className="w-full lg:w-48 border-gold/20 focus:border-gold">
+                <SortAsc className="w-4 h-4 mr-2" />
+                <SelectValue placeholder="Sort by" />
+              </SelectTrigger>
+              <SelectContent>
+                {sortOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            {/* View Mode Toggle */}
+            <div className="flex border border-gold/20 rounded-lg p-1">
+              <Button
+                variant={viewMode === 'grid' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setViewMode('grid')}
+                className="p-2"
+              >
+                <Grid3X3 className="w-4 h-4" />
+              </Button>
+              <Button
+                variant={viewMode === 'list' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setViewMode('list')}
+                className="p-2"
+              >
+                <List className="w-4 h-4" />
+              </Button>
+            </div>
+
+            {/* Clear Filters */}
+            {hasActiveFilters && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={clearFilters}
+                className="border-gold/30 text-gold hover:bg-gold hover:text-ink"
+              >
+                <X className="w-4 h-4 mr-2" />
+                Clear
+              </Button>
+            )}
+          </div>
+
+          {/* Results Summary */}
+          <div className="mt-4 text-sm text-muted-foreground">
+            Showing {filteredCollections.length} of {collections.length} collections
           </div>
         </div>
       </section>
 
+      {/* Collections Grid */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          {filteredCollections.length === 0 ? (
+            <div className="text-center py-16">
+              <div className="w-20 h-20 bg-gradient-to-br from-gold/20 to-yellow-400/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Search className="w-10 h-10 text-gold" />
+              </div>
+              <h3 className="text-xl font-serif font-semibold text-ink mb-3">No collections found</h3>
+              <p className="text-muted-foreground mb-6">
+                Try adjusting your filters or search terms to find what you&apos;re looking for.
+              </p>
+              <Button
+                variant="outline"
+                onClick={clearFilters}
+                className="border-gold/30 text-gold hover:bg-gold hover:text-ink"
+              >
+                Clear Filters
+              </Button>
+            </div>
+          ) : (
+            <div className={viewMode === 'grid' 
+              ? "grid grid-cols-1 lg:grid-cols-2 gap-8" 
+              : "space-y-6"
+            }>
+              {filteredCollections.map((collection, index) => (
+                <Link 
+                  key={collection.id} 
+                  href={collection.href} 
+                  className="group animate-in fade-in slide-in-from-bottom-4"
+                  style={{ animationDelay: `${index * 100}ms` }}
+                >
+                  <Card className="overflow-hidden border-0 shadow-soft hover:shadow-elevated transition-all duration-500 group-hover:-translate-y-2 h-full">
+                    <div className="relative aspect-[16/10]">
+                      <Image
+                        src={collection.image}
+                        alt={collection.title}
+                        fill
+                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                        sizes={viewMode === 'grid' ? "(max-width: 1024px) 100vw, 50vw" : "100vw"}
+                        priority={index < 2}
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-ink/60 via-transparent to-transparent" />
+                      
+                      {/* Badge */}
+                      <div className="absolute top-6 left-6">
+                        <Badge variant="accent" className="text-xs shadow-lg">
+                          {collection.badge}
+                        </Badge>
+                      </div>
+
+                      {/* Content Overlay */}
+                      <div className="absolute bottom-6 left-6 right-6 text-white">
+                        <h3 className="h2 mb-2">{collection.title}</h3>
+                        <p className="text-sm opacity-90 mb-4 line-clamp-2">
+                          {collection.description}
+                        </p>
+                        
+                        <div className="flex items-center gap-2 text-sm font-medium opacity-80 group-hover:opacity-100 transition-opacity">
+                          <span>Explore Collection</span>
+                          <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                        </div>
+                      </div>
+                    </div>
+                  </Card>
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
       {/* Featured Products */}
-      <section className="py-20 bg-fog">
+      <section className="py-20 bg-gradient-to-br from-fog to-cream">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <Badge variant="outline" className="mb-4">
@@ -135,8 +341,10 @@ export default function CollectionsPage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {bestSellers.slice(0, 4).map((product) => (
-              <ProductCard key={product.id} product={product} />
+            {bestSellers.slice(0, 4).map((product, index) => (
+              <div key={product.id} className="animate-in fade-in slide-in-from-bottom-4" style={{ animationDelay: `${index * 100}ms` }}>
+                <ProductCard product={product} />
+              </div>
             ))}
           </div>
         </div>
@@ -166,8 +374,10 @@ export default function CollectionsPage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {newProducts.slice(0, 4).map((product) => (
-              <ProductCard key={product.id} product={product} />
+            {newProducts.slice(0, 4).map((product, index) => (
+              <div key={product.id} className="animate-in fade-in slide-in-from-bottom-4" style={{ animationDelay: `${index * 100}ms` }}>
+                <ProductCard product={product} />
+              </div>
             ))}
           </div>
 
@@ -183,7 +393,7 @@ export default function CollectionsPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-ink text-cream">
+      <section className="py-20 bg-gradient-to-br from-ink to-coal text-cream">
         <div className="container mx-auto px-4">
           <div className="text-center max-w-3xl mx-auto">
             <Badge variant="secondary" className="mb-6 bg-gold text-ink">
