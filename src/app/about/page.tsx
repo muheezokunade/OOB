@@ -97,10 +97,11 @@ export default function AboutPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="relative h-96 rounded-lg overflow-hidden">
               <Image
-                src="/images/features/shoes-feature.svg"
-                alt="Craftsmanship"
+                src="https://i.postimg.cc/KjVtZb3s/PHOTO-2025-10-16-20-52-39.jpg"
+                alt="Designer Shoes Collection"
                 fill
                 className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 50vw"
               />
             </div>
             <div className="space-y-6">
